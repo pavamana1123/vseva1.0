@@ -1,10 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `iskconmy_folk` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `iskconmy_folk`;
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `iskconmy_vseva` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `iskconmy_vseva`;
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
--- Host: localhost    Database: iskconmy_folk
+-- Host: localhost    Database: iskconmy_vseva
 -- ------------------------------------------------------
--- Server version	8.0.19
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,223 +18,160 @@ USE `iskconmy_folk`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `calendar`
+-- Table structure for table `availability`
 --
 
-DROP TABLE IF EXISTS `calendar`;
+DROP TABLE IF EXISTS `availability`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `calendar` (
-  `eventId` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `date` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `program` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` mediumtext COLLATE utf8mb4_general_ci,
-  `venue` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `speaker` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  PRIMARY KEY (`eventId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `availability` (
+  `eventID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `availability` varchar(50) DEFAULT NULL,
+  UNIQUE KEY `unique_availability` (`eventID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `compute`
+-- Table structure for table `events`
 --
 
-DROP TABLE IF EXISTS `compute`;
+DROP TABLE IF EXISTS `events`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `compute` (
-  `username` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `attendance` int DEFAULT NULL,
-  `sosAttendance` int DEFAULT NULL,
-  `folk2Attendance` int DEFAULT NULL,
-  `folk4Attendance` int DEFAULT NULL,
-  `lastSeen` int DEFAULT NULL,
-  `regularity` float DEFAULT NULL,
-  `status` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `activeness` float DEFAULT NULL,
-  PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `events` (
+  `eventID` varchar(45) DEFAULT NULL,
+  `festivalID` varchar(45) DEFAULT NULL,
+  `date` varchar(20) DEFAULT NULL,
+  `eventName` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_event` (`date`,`eventID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `participants`
+-- Table structure for table `festivalgroups`
 --
 
-DROP TABLE IF EXISTS `participants`;
+DROP TABLE IF EXISTS `festivalgroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `participants` (
-  `username` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `program` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `dob` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `snoozeDate` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `isStudent` tinyint DEFAULT NULL,
-  `callNotAvailable` tinyint DEFAULT '0',
-  `whatsAppNotAvailable` tinyint DEFAULT '0',
-  `yearOfJoining` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `institution` mediumtext COLLATE utf8mb4_general_ci,
-  `course` mediumtext COLLATE utf8mb4_general_ci,
-  `company` mediumtext COLLATE utf8mb4_general_ci,
-  `highestQualification` mediumtext COLLATE utf8mb4_general_ci,
-  `designation` mediumtext COLLATE utf8mb4_general_ci,
-  `tShirtSize` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `skills` longtext COLLATE utf8mb4_general_ci,
-  `comments` longtext COLLATE utf8mb4_general_ci,
-  `dateAdded` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `addedBy` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `preacher` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `buddy` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `source` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `category` varchar(45) COLLATE utf8mb4_general_ci DEFAULT 'General',
-  `batch` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `native` mediumtext COLLATE utf8mb4_general_ci,
-  `pass` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `festivalgroups` (
+  `festivalID` varchar(45) DEFAULT NULL,
+  `groupName` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_group` (`festivalID`,`groupName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `participation`
+-- Table structure for table `festivals`
 --
 
-DROP TABLE IF EXISTS `participation`;
+DROP TABLE IF EXISTS `festivals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `participation` (
-  `eventId` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `caller` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `response` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `remarks` longtext COLLATE utf8mb4_general_ci,
-  `attendance` tinyint DEFAULT NULL,
-  `time` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  UNIQUE KEY `uc_compound_key` (`eventId`,`name`,`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `programs`
---
-
-DROP TABLE IF EXISTS `programs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `programs` (
-  `id` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `type` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `level` int DEFAULT NULL,
+CREATE TABLE `festivals` (
+  `id` varchar(45) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `shortName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `prospects`
+-- Table structure for table `ftms`
 --
 
-DROP TABLE IF EXISTS `prospects`;
+DROP TABLE IF EXISTS `ftms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `prospects` (
-  `id` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `program` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `isStudent` tinyint DEFAULT NULL,
-  `callNotAvailable` tinyint DEFAULT '0',
-  `whatsAppNotAvailable` tinyint DEFAULT '0',
-  `yearOfJoining` int DEFAULT NULL,
-  `institution` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `course` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `company` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `highestQualification` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `designation` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `skills` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `comments` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `dateAdded` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `addedBy` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `source` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `batch` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `registrations`
---
-
-DROP TABLE IF EXISTS `registrations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `registrations` (
-  `date` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `program` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `username` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `paid` tinyint DEFAULT NULL,
-  `paymentMode` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `paymentReference` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `meta` json DEFAULT NULL,
-  UNIQUE KEY `rc_compound_key` (`program`,`name`,`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `roles`
---
-
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roles` (
-  `username` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `roleIndex` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `roleID` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `roleName` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+CREATE TABLE `ftms` (
+  `username` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `sessions`
+-- Table structure for table `servicegroups`
 --
 
-DROP TABLE IF EXISTS `sessions`;
+DROP TABLE IF EXISTS `servicegroups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sessions` (
-  `program` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `message` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `canvaLink` mediumtext COLLATE utf8mb4_general_ci,
-  `posterLink` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  UNIQUE KEY `sc_compound_key` (`program`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `servicegroups` (
+  `major` varchar(45) DEFAULT NULL,
+  `serviceID` varchar(45) DEFAULT NULL,
+  UNIQUE KEY `unique_servicegroup` (`major`,`serviceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `serviceheads`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `serviceheads`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `username` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `addedBy` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `addedDate` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `pass` varchar(45) COLLATE utf8mb4_general_ci DEFAULT NULL,
+CREATE TABLE `serviceheads` (
+  `serviceID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_servicehead` (`serviceID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `servicelist`
+--
+
+DROP TABLE IF EXISTS `servicelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `servicelist` (
+  `serviceID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_service_username` (`serviceID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `services`
+--
+
+DROP TABLE IF EXISTS `services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `services` (
+  `serviceID` varchar(45) NOT NULL,
+  `eventID` varchar(45) DEFAULT NULL,
+  `serviceName` varchar(255) DEFAULT NULL,
+  `serviceDescription` text,
+  `timings` varchar(100) DEFAULT NULL,
+  `requirement` int DEFAULT NULL,
+  PRIMARY KEY (`serviceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `volunteers`
+--
+
+DROP TABLE IF EXISTS `volunteers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `volunteers` (
+  `username` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `dob` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `japaRounds` int DEFAULT NULL,
+  `category` varchar(45) DEFAULT NULL,
+  `preacher` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -246,4 +183,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-27 13:04:16
+-- Dump completed on 2023-07-05 21:48:47
