@@ -68,7 +68,7 @@ const Login = () => {
     <div className="login-container">
       <img
         className="login-logo"
-        src="https://play-lh.googleusercontent.com/dtMAZtzr011BU_f-PT9gfiZJF-VJ9uAyrgTTbUir1Tgk2bpRnp7WQJ9lrYy9h36oCj4"
+        src="/img/header/logo.png"
         alt="Logo"
       />
       <form className="login-form" onSubmit={handleSubmit}>
