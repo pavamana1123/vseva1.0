@@ -70,6 +70,21 @@ class API {
               })
             break
 
+            case "/get-festival-details":
+              var { id } = body
+              id = id.trim()
+              var isGroup = id.toLowerCase().endsWith('group')
+              var query = isGroup?`select * from festivalgroups where groupName='${id.toUpperCase().replaceAll('GROUP','Group')}';`:`select * from festivals where id='${id.toUpperCase()}';`
+              
+              this.db.execQuery(query)
+                .then((resp)=>{
+                  res.status(200).send(resp)
+                })
+                .catch((err)=>{
+                  this.sendError(res, 500, err)
+                })
+              break
+
             default:
                 this.sendError(res, 404, "Invalid endpoint")
         }

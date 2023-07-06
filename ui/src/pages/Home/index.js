@@ -10,7 +10,7 @@ function Home(props){
 
     return (
         <div>
-            <Header/>
+            Hare Krishna
         </div>
     )
 }

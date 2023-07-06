@@ -5,7 +5,7 @@ import menu from "../../menu"
 
 
 function Header(props) {
-  var {children} = props
+  var {children, hideMenus} = props
 
   var [menuOpen, setMenuOpen] = useState(false);
   var [contextMenuOpen, setContextMenuOpen] = useState(false);
@@ -26,17 +26,17 @@ function Header(props) {
     setContextMenuOpen(false)
   }
 
-  const save = _.getSave()
+  const save =  _.getSave()
 
   return (
     <div className="header-holder">
       <div className='header'>
-          <img src="img/header/menu.png" id="header-menu" onClick={toggleMenu}/>
-          <img src="img/header/logo.png" id="header-logo"/>
-          <img src="img/header/dots.png" id="header-dots" onClick={toggleContextMenu}/>
+          {hideMenus?<div/>:<img src="img/header/menu.png" id="header-menu" onClick={toggleMenu}/>}
+          <div className='header-text'>ISKCON Mysore Volunteering</div>
+          {hideMenus?<div/>:<img src="img/header/dots.png" id="header-dots" onClick={toggleContextMenu}/>}
       </div>
 
-      <div className={`header-menu ${menuOpen?'open':''}`}>
+      {!hideMenus?<div className={`header-menu ${menuOpen?'open':''}`}>
         <div className='header-menu-cont'>
           <div className='header-user-det-cont'>
             <div className='header-user-det-dp-cont'>
@@ -83,11 +83,11 @@ function Header(props) {
           </div>
 
         </div>
-      </div>
+      </div>:null}
 
-      <div className={`header-contextmenu ${contextMenuOpen?'open':''}`}>
+      {!hideMenus?<div className={`header-contextmenu ${contextMenuOpen?'open':''}`}>
         {children}
-      </div>
+      </div>:null}
 
       <div className={`header-menuglass ${!menuOpen?'hide':''}`} onClick={closeMenu}>
       </div>

@@ -8,7 +8,7 @@ import Login from './pages/login';
 import Buddies from './pages/buddies';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Home from './pages/Home';
+import RegForm from './pages/RegForm';
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
           <Route path="/elements" element={<Elements/>}></Route>
           <Route path="/buddies" element={<Buddies/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
-          <Route path="/home" element={<Home/>}></Route>
+          <Route path="/reg/:id" element={<RegForm/>}></Route>
         </Routes>
     </Router>
     <ToastContainer />

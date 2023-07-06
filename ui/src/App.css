@@ -13,18 +13,6 @@ body {
   background-color: var(--bg);  
 }
 
-button {
-  background-color: var(--green);
-  color: white;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  font-size: 5vw;
-  padding: 2%;
-  height: fit-content;
-  transition: background-color 0.5s;
-}
-
 button:disabled {
   opacity: 0.5;
 }

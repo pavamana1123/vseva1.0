@@ -1,0 +1,70 @@
+.reg-container {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    white-space: pre;
+    text-align: center;
+}
+
+.fest-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100vw;
+    align-items: center;
+}
+
+.fest-header {
+    display: flex;
+    flex-direction: row;
+    background: white;
+}
+
+.fest-logo-cont {
+    display: flex;
+    width: 30vw;
+    height: 30vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.fest-logo {
+    display: flex;
+    background: aliceblue;
+    width: 25vw;
+    height: 25vw;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 6vw;
+    text-transform: uppercase;
+}
+
+.fest-title {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    text-wrap: balance;
+}
+
+.fest-name {
+    font-weight: bold;
+    font-size: 6vw;
+    margin-bottom: 2vw;
+}
+
+.fest-desc {
+    display: flex;
+    flex-direction: column;
+    max-height: 50vh;
+    background: white;
+    width: 90vw;
+    padding: 2vw;
+    text-wrap: balance;
+    border-radius: 1vw;
+    margin: 2vw 0 2vw 0;
+    box-shadow: -1px 5px 6px rgba(0, 0, 0, 0.1);
+}
