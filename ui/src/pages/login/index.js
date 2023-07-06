@@ -1,24 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
+import moment from 'moment'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
 
 const Login = () => {
+  const otpExpirationSeconds = 300
   const [inputID, setinputID] = useState('')
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
-  const [otpExpired, setOtpExpired] = useState(false)
-  const [secondsRemaining, setSecondsRemaining] = useState(180)
+  const [secondsRemaining, setSecondsRemaining] = useState(otpExpirationSeconds)
+  const [timerID, setTimerID] = useState()
   const [sendOTPEnabled, setSendOTPEnabled] = useState(false)
   const [verifyOTPEnabled, setVerifyOTPEnabled] = useState(false)
   const [sendOTPWaiting, setSendOTPWaiting] = useState(false)
   const [verifyOTPWaiting, setVerifyOTPWaiting] = useState(false)
 
   var loginInput = useRef()
+  var otpTimestamp = useRef(null)
 
   useEffect(()=>{
-    // document.getElementById("login-input").focus()
     loginInput.current.focus()
   }, [])
 
@@ -29,7 +31,11 @@ const Login = () => {
     
     return numberRegex.test(input) || emailRegex.test(input);
   }
-  
+
+  const isValidOTP = (input)=> {
+    const numberRegex = /^\d{6}$/;
+    return numberRegex.test(input) 
+  }
 
   const handleInputIDChange = (e) => {
     setinputID(e.target.value.trim().replace(/\s/g, ''))
@@ -41,7 +47,12 @@ const Login = () => {
   }
 
   const handleOtpChange = (e) => {
-    setOtp(e.target.value)
+    setOtp(e.target.value.trim().replace(/\s/g, ''))
+    if(isValidOTP(e.target.value)){
+      setVerifyOTPEnabled(true)
+    }else{
+      setVerifyOTPEnabled(false)
+    }
   }
 
   const handleSendOtp = () => {
@@ -69,7 +80,7 @@ const Login = () => {
         // Successful API call
         toast.success('OTP is sent to your WhatsApp number/email ID')
         setOtpSent(true)
-        startOtpExpirationTimer()
+        startOTPTimer()
       })
       .catch((error) => {
         // Error occurred during API call
@@ -82,35 +93,42 @@ const Login = () => {
   }
 
   const handleVerifyOtp = () => {
-    const endpoint = '/verify-otp'
+
+    const endpoint = '/api'
     const requestData = {
       id: `vseva-${inputID}`,
-      otp: otp,
     }
 
-    axios
-      .post(endpoint, requestData)
-      .then((response) => {
-        // Successful OTP verification
-        window.location.href = '/home' // Redirect to the home page
+    axios.post(endpoint, requestData, {
+        headers: {
+          'endpoint': '/verify-otp',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(() => {
+        console.log('response')
+        // window.open('/home', '_self')
       })
       .catch((error) => {
-        // Error occurred during OTP verification
+        console.log(error)
         toast.error('Unable to verify OTP. Please contact the admin.')
       })
   }
 
-  const startOtpExpirationTimer = () => {
-    let secondsRemaining = 180 // Set the initial countdown time (180 seconds = 3 minutes)
-
-    const timer = setInterval(() => {
-      secondsRemaining--
-
-      if (secondsRemaining <= 0) {
-        clearInterval(timer)
-        setOtpExpired(true)
+  const startOTPTimer = () => {
+    otpTimestamp.current = moment()
+    setTimerID(setInterval(() => {
+      var s = otpExpirationSeconds - moment.duration(moment().diff(otpTimestamp.current)).asSeconds()
+      setSecondsRemaining(s)
+      if (s <= 0) {
+        clearInterval(timerID)
+        setOtpSent(false)
+        setinputID('')
+        setSecondsRemaining(otpExpirationSeconds)
+        otpTimestamp.current=null
+        toast.error('OTP has expired! Try again.')
       }
-    }, 1000)
+    }, 1000))
   }
 
   return (
@@ -118,28 +136,30 @@ const Login = () => {
       <img src="/img/header/logo.png" className="login-logo" />
       <div className='login-title'>ISKCON Mysore Volunteering</div>
       <label className='login-label-1'>
-       {otpSent?`Enter OTP sent to your ${isNaN(inputID)?'Email ID':'phone'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
+       {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'phone'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
       </label>
-      <input
-        type="text"
-        value={otpSent?otp:inputID}
-        onChange={otpSent?handleOtpChange:handleInputIDChange}
-        className="login-input"
-        ref={loginInput}
-      />
+      <form className='login-form'>
+        <input
+          type="text"
+          value={otpSent?otp:inputID}
+          onChange={otpSent?handleOtpChange:handleInputIDChange}
+          placeholder={otpSent?'Enter OTP':''}
+          className="login-input"
+          ref={loginInput}
+        />
 
-      <button
-        onClick={otpSent?handleVerifyOtp:handleSendOtp}
-        disabled={otpSent?!verifyOTPEnabled:!sendOTPEnabled}
-        className="login-send-button"
-      >
-        {otpSent?(verifyOTPWaiting?'Verifying...':'Verify OTP'):(sendOTPWaiting?'Sending...':'Send OTP')}
-      </button>
+        <button
+          onClick={otpSent?handleVerifyOtp:handleSendOtp}
+          disabled={otpSent?!verifyOTPEnabled:!sendOTPEnabled}
+          className="login-send-button"
+        >
+          {otpSent?(verifyOTPWaiting?'Verifying...':'Verify OTP'):(sendOTPWaiting?'Sending...':'Send OTP')}
+        </button>
+      </form>
 
-      {otpSent && !otpExpired && (
+      {otpSent && (
         <div className="login-timer">
-          Your OTP expires in <span>{Math.floor(secondsRemaining / 60)}</span>:
-          <span>{secondsRemaining % 60 < 10 ? `0${secondsRemaining % 60}` : secondsRemaining % 60}</span>
+          <span>{`Your OTP expires in  ${Math.floor(secondsRemaining / 60).toString().padStart(2, '0')}:${Math.floor(secondsRemaining % 60 < 10 ? `0${secondsRemaining % 60}` : secondsRemaining % 60).toString().padStart(2, '0')}`}</span>
         </div>
       )}
     </div>

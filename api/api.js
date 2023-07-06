@@ -16,7 +16,7 @@ class API {
         switch(req.get("endpoint")){
 
           case '/send-otp':
-            const { phone, email, id } = body
+            var { phone, email, id } = body
             var userData
             try {
               var ftmData = await this.db.execQuery(`select * from ftms where ${phone?'phone':'email'}='${phone?phone:email}';`)
@@ -51,71 +51,23 @@ class API {
               })
             break
 
-            case '/buddies':
-
-            const username = req.get("username")
-
-            try {
-              let query = `SELECT * FROM roles WHERE username = '${username}' order by roleIndex limit 1`
-              let result = await this.db.execQuery(query)
-          
-              if (result.length > 0) {
-
-                  var role = result[0]
-                  switch(role.roleID){
-                    case "FG":
-                      query=`select * from participants
-                      join compute on compute.username=participants.username
-                      order by compute.activeness`
-                      break
-                    case "Core":
-                      query=`select * from participants
-                      join compute on compute.username=participants.username
-                      where participants.buddy="${username}"
-                      order by compute.activeness`
-                      break
-                    default:
-                      this.sendError(res, 404, "Unauthorized")
-                      return
-                  }
-
-                  let buddies = await this.db.execQuery(query)
-                  res.status(200).json(buddies)
-              } else {
-                this.sendError(res, 404, "Unauthorized")
-                return
+          case '/verify-otp':
+            var { otp , id } = body
+            
+            axios.post('https://otp.iskconmysore.org/data', {
+              id, otp
+            }, {
+              headers: {
+                'endpoint': '/verify',
+                'Content-Type': 'application/json'
               }
-            } catch (error) {
-              // Handle any error that occurred during the database query or other operations
-              console.error("Login error:", error)
-              this.sendError(res, 500, `Internal server error: ${error}`)
-            }
-            break
-
-          case "/sync":
-            sync.getSyncData()
-            .then(async resp => {
-              var queries = sync.getQueries(resp.data)
-              var errors = []
-
-              console.log(new Date(), `Sync began`)
-
-              for(var i=0; i<queries.length; i++){
-                try {
-                  await this.db.execQuery(queries[i])
-                } catch(e){
-                  errors.push({
-                    query: queries[i],
-                    error: e
-                  })
-                }
-              }
-              console.log(new Date(), `Sync completed`)
-              res.status(200).json(errors)
             })
-            .catch(error => {
-              this.sendError(res, 404, error)
-            })
+              .then(response => {
+                res.status(200).send()
+              })
+              .catch(error => {
+                this.sendError(res, 500, error)
+              })
             break
 
             default:

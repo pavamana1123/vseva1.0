@@ -20,6 +20,14 @@
     margin-bottom: 15vw;
   }
 
+  .login-timer {
+    display: flex;
+    width: 80vw;
+    flex-direction: row;
+    justify-content: center;
+    margin: 2vw 0 2vw 0;
+  }
+
   .login-label-1 {
     color: #666;
     font-size: 4vw;
@@ -32,7 +40,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    justify-content: center;
   }
   
   .login-input {
