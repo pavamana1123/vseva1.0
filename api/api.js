@@ -1,5 +1,6 @@
 var cred = require("./cred.js")
 const sync = require("./sync.js")
+const axios = require('axios')
 
 class API {
     constructor(db){
@@ -14,81 +15,43 @@ class API {
         
         switch(req.get("endpoint")){
 
-          case '/login':
+          case '/send-otp':
+            const { phone, email, id } = body
+            var userData
             try {
-              const { phone, username, password } = body
-          
-              let user = null
-              let userDetails = null
-          
-              // Check if the phone number exists in the participants table
-              let query = `SELECT * FROM participants WHERE ${phone?"phone":"username"} = '${phone?phone:username}'`
-              let result = await this.db.execQuery(query)
-          
-              if (result.length > 0) {
-                user = result[0]
-                userDetails = {
-                  username: user.username,
-                  name: user.name,
-                  phone: user.phone,
-                  roleInfo: []
-                }
-              } else {
-                // Phone number not found in the participants table, check in the users table
-                query = `SELECT * FROM users WHERE ${phone?"phone":"username"} = '${phone?phone:username}'`
-                result = await this.db.execQuery(query)
-          
-                if (result.length > 0) {
-                  user = result[0]
-                  userDetails = {
-                    username: user.username,
-                    name: user.name,
-                    phone: user.phone,
-                    roleInfo: []
-                  }
+              var ftmData = await this.db.execQuery(`select * from ftms where ${phone?'phone':'email'}='${phone?phone:email}';`)
+              if(ftmData.length){
+                userData = {users: ftmData, role: "FTM"}
+              }else{
+                var volunteerData = await this.db.execQuery(`select * from volunteers where ${phone?'phone':'email'}='${phone?phone:email}';`)
+                if(volunteerData.length){
+                  userData = {users: volunteerData, role: "Volunteer"}
+                }else{
+                  this.sendError(res, 404, new Error("User not found"))
+                  return
                 }
               }
-          
-              if (user) {
-                // User exists, check the password
-                const storedPassword = user.pass // Assuming the password is stored in a column named 'pass'
-          
-                // Compare the provided password with the stored password (assuming the password is already hashed)
-                if (password === storedPassword) {
-                  // Password is correct, search in the roles table
-                  query = `SELECT * FROM roles WHERE username='${user.username}'`
-                  result = await this.db.execQuery(query)
-          
-                  if (result.length > 0) {
-                    const roleInfo = result
-                    userDetails.roleInfo = roleInfo.map(r=>{
-                      return {
-                        roleName: r.roleName,
-                        roleID: r.roleID,
-                        roleIndex: r.roleIndex
-                      }
-                    }).sort((r1, r2)=>{
-                      return r1.roleIndex-r2.roleIndex
-                    })
-                  }
-          
-                  res.status(200).json(userDetails)
-                } else {
-                  // Invalid password
-                  this.sendError(res, 403, "Invalid password")
-                }
-              } else {
-                // User does not exist
-                this.sendError(res, 404, "User does not exist")
-              }
-            } catch (error) {
-              // Handle any error that occurred during the database query or other operations
-              console.error("Login error:", error)
-              this.sendError(res, 500, "Internal server error")
+            }catch(e){
+              this.sendError(res, 500, e)
             }
+            
+            axios.post('https://otp.iskconmysore.org/data', {
+              id, email, phone
+            }, {
+              headers: {
+                'endpoint': '/send',
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(response => {
+                res.status(200).send(userData)
+              })
+              .catch(error => {
+                this.sendError(res, 500, error)
+              })
             break
-           
-          case '/buddies':
+
+            case '/buddies':
 
             const username = req.get("username")
 
