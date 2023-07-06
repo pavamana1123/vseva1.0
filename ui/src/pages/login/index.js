@@ -1,3 +1,8 @@
+// TODO
+// - change inputID feature
+// - resend OTP feature
+
+
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
@@ -81,7 +86,7 @@ const Login = () => {
       })
       .then((response) => {
         userData.current = response.data
-        toast.success('OTP is sent to your WhatsApp number/email ID')
+        toast.success(`OTP is sent to your ${isNaN(inputID)?'Email ID':'WhatsApp number'}`)
         setOtpSent(true)
         startOTPTimer()
       })
@@ -159,7 +164,7 @@ const Login = () => {
         <img src="/img/header/logo.png" className="login-logo" />
         <div className='login-title'>ISKCON Mysore Volunteering</div>
         <label className='login-label-1'>
-        {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'phone'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
+        {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'WhatsApp number'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
         </label>
         <input
           type="text"
