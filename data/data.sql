@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `iskconmy_vseva` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `iskconmy_vseva`;
 -- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: iskconmy_vseva
@@ -16,6 +18,21 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `availability`
+--
+
+DROP TABLE IF EXISTS `availability`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `availability` (
+  `eventID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `availability` varchar(50) DEFAULT NULL,
+  UNIQUE KEY `unique_availability` (`eventID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `availability`
 --
 
@@ -23,6 +40,22 @@ LOCK TABLES `availability` WRITE;
 /*!40000 ALTER TABLE `availability` DISABLE KEYS */;
 /*!40000 ALTER TABLE `availability` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `dates`
+--
+
+DROP TABLE IF EXISTS `dates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `dates` (
+  `festivalID` varchar(45) DEFAULT NULL,
+  `date` varchar(20) DEFAULT NULL,
+  `day` varchar(255) DEFAULT NULL,
+  `slots` mediumtext,
+  UNIQUE KEY `unique_event` (`date`,`festivalID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `dates`
@@ -35,14 +68,45 @@ INSERT INTO `dates` VALUES ('SBJ23','2023-08-31','Balarama Purnima','4AM - 7AM, 
 UNLOCK TABLES;
 
 --
+-- Table structure for table `festivalgroups`
+--
+
+DROP TABLE IF EXISTS `festivalgroups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `festivalgroups` (
+  `festivalID` varchar(45) DEFAULT NULL,
+  `groupName` varchar(255) DEFAULT NULL,
+  `formDescription` longtext,
+  UNIQUE KEY `unique_group` (`festivalID`,`groupName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `festivalgroups`
 --
 
 LOCK TABLES `festivalgroups` WRITE;
 /*!40000 ALTER TABLE `festivalgroups` DISABLE KEYS */;
-INSERT INTO `festivalgroups` VALUES ('SKJ23','SKJ23Group'),('SVP23','SKJ23Group');
+INSERT INTO `festivalgroups` VALUES ('SKJ23','SKJ23Group',NULL),('SVP23','SKJ23Group',NULL);
 /*!40000 ALTER TABLE `festivalgroups` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `festivals`
+--
+
+DROP TABLE IF EXISTS `festivals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `festivals` (
+  `id` varchar(45) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `shortName` varchar(50) DEFAULT NULL,
+  `formDescription` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `festivals`
@@ -50,9 +114,25 @@ UNLOCK TABLES;
 
 LOCK TABLES `festivals` WRITE;
 /*!40000 ALTER TABLE `festivals` DISABLE KEYS */;
-INSERT INTO `festivals` VALUES ('SBJ23','Sri Balarama Purnima 2023','SBJ'),('SKJ23','Sri Krishna Janmastami 2023','SKJ'),('SVP23','Sri Vyasa Puja 2023','SVP');
+INSERT INTO `festivals` VALUES ('SBJ23','Sri Balarama Purnima 2023','SBJ',NULL),('SKJ23','Sri Krishna Janmastami 2023','SKJ',NULL),('SVP23','Sri Vyasa Puja 2023','SVP',NULL);
 /*!40000 ALTER TABLE `festivals` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `ftms`
+--
+
+DROP TABLE IF EXISTS `ftms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ftms` (
+  `username` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ftms`
@@ -65,6 +145,20 @@ INSERT INTO `ftms` VALUES ('agld','Amogha Lila Dasa','9379850565','agld@iskconmy
 UNLOCK TABLES;
 
 --
+-- Table structure for table `servicegroups`
+--
+
+DROP TABLE IF EXISTS `servicegroups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `servicegroups` (
+  `major` varchar(45) DEFAULT NULL,
+  `serviceID` varchar(45) DEFAULT NULL,
+  UNIQUE KEY `unique_servicegroup` (`major`,`serviceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `servicegroups`
 --
 
@@ -72,6 +166,21 @@ LOCK TABLES `servicegroups` WRITE;
 /*!40000 ALTER TABLE `servicegroups` DISABLE KEYS */;
 /*!40000 ALTER TABLE `servicegroups` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `serviceheads`
+--
+
+DROP TABLE IF EXISTS `serviceheads`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `serviceheads` (
+  `serviceID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_servicehead` (`serviceID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `serviceheads`
@@ -83,6 +192,20 @@ LOCK TABLES `serviceheads` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `servicelist`
+--
+
+DROP TABLE IF EXISTS `servicelist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `servicelist` (
+  `serviceID` varchar(45) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_service_username` (`serviceID`,`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `servicelist`
 --
 
@@ -92,6 +215,24 @@ LOCK TABLES `servicelist` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `services`
+--
+
+DROP TABLE IF EXISTS `services`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `services` (
+  `serviceID` varchar(45) NOT NULL,
+  `eventID` varchar(45) DEFAULT NULL,
+  `serviceName` varchar(255) DEFAULT NULL,
+  `serviceDescription` text,
+  `timings` varchar(100) DEFAULT NULL,
+  `requirement` int DEFAULT NULL,
+  PRIMARY KEY (`serviceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `services`
 --
 
@@ -99,6 +240,27 @@ LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `volunteers`
+--
+
+DROP TABLE IF EXISTS `volunteers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `volunteers` (
+  `username` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `dob` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `japaRounds` int DEFAULT NULL,
+  `category` varchar(45) DEFAULT NULL,
+  `preacher` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `volunteers`
@@ -118,4 +280,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-06 19:19:55
+-- Dump completed on 2023-07-06 20:36:07
