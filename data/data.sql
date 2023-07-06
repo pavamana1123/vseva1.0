@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: iskconmy_vseva
 -- ------------------------------------------------------
--- Server version	8.0.19
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,12 +25,13 @@ LOCK TABLES `availability` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `events`
+-- Dumping data for table `dates`
 --
 
-LOCK TABLES `events` WRITE;
-/*!40000 ALTER TABLE `events` DISABLE KEYS */;
-/*!40000 ALTER TABLE `events` ENABLE KEYS */;
+LOCK TABLES `dates` WRITE;
+/*!40000 ALTER TABLE `dates` DISABLE KEYS */;
+INSERT INTO `dates` VALUES ('SBJ23','2023-08-31','Balarama Purnima','4AM - 7AM, 7AM - 1PM, 1PM - 4PM, 4PM - 10PM'),('SKJ23','2023-09-06','Sri Krishna Janmashtami - Day 1','4AM - 7AM, 7AM - 1PM, 1PM - 4PM, 4PM - 10PM'),('SKJ23','2023-09-07','Sri Krishna Janmashtami - Day 2','4AM - 7AM, 7AM - 1PM, 1PM - 4PM, 4PM - 10PM, 10PM - 12AM'),('SVP23','2023-09-08','Sri Vyasa Puja','4AM - 7AM, 7AM - 1PM, 1PM - 4PM, 4PM - 10PM');
+/*!40000 ALTER TABLE `dates` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -39,6 +40,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `festivalgroups` WRITE;
 /*!40000 ALTER TABLE `festivalgroups` DISABLE KEYS */;
+INSERT INTO `festivalgroups` VALUES ('SKJ23','SKJ23Group'),('SVP23','SKJ23Group');
 /*!40000 ALTER TABLE `festivalgroups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,6 +50,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `festivals` WRITE;
 /*!40000 ALTER TABLE `festivals` DISABLE KEYS */;
+INSERT INTO `festivals` VALUES ('SBJ23','Sri Balarama Purnima 2023','SBJ'),('SKJ23','Sri Krishna Janmastami 2023','SKJ'),('SVP23','Sri Vyasa Puja 2023','SVP');
 /*!40000 ALTER TABLE `festivals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -115,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-06 17:55:24
+-- Dump completed on 2023-07-06 19:19:55

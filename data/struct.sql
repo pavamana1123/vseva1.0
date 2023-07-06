@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `iskconmy_vseva` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `iskconmy_vseva`;
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: localhost    Database: iskconmy_vseva
 -- ------------------------------------------------------
--- Server version	8.0.19
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,18 +33,18 @@ CREATE TABLE `availability` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `events`
+-- Table structure for table `dates`
 --
 
-DROP TABLE IF EXISTS `events`;
+DROP TABLE IF EXISTS `dates`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `events` (
-  `eventID` varchar(45) DEFAULT NULL,
+CREATE TABLE `dates` (
   `festivalID` varchar(45) DEFAULT NULL,
   `date` varchar(20) DEFAULT NULL,
-  `eventName` varchar(255) DEFAULT NULL,
-  UNIQUE KEY `unique_event` (`date`,`eventID`)
+  `day` varchar(255) DEFAULT NULL,
+  `slots` mediumtext,
+  UNIQUE KEY `unique_event` (`date`,`festivalID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,4 +184,4 @@ CREATE TABLE `volunteers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-06 18:57:24
+-- Dump completed on 2023-07-06 19:19:41
