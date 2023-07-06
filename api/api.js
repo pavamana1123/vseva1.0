@@ -43,11 +43,11 @@ class API {
                 'Content-Type': 'application/json'
               }
             })
-              .then(response => {
+              .then(() => {
                 res.status(200).send(userData)
               })
               .catch(error => {
-                this.sendError(res, 500, error)
+                this.sendError(res, error.response.status, error)
               })
             break
 
@@ -62,11 +62,11 @@ class API {
                 'Content-Type': 'application/json'
               }
             })
-              .then(response => {
+              .then(() => {
                 res.status(200).send()
               })
               .catch(error => {
-                this.sendError(res, 500, error)
+                this.sendError(res, error.response.status, error)
               })
             break
 

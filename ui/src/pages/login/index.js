@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import { toast } from 'react-toastify'
+import Cookies from 'js-cookie'
 import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
 
@@ -16,9 +17,11 @@ const Login = () => {
   const [verifyOTPEnabled, setVerifyOTPEnabled] = useState(false)
   const [sendOTPWaiting, setSendOTPWaiting] = useState(false)
   const [verifyOTPWaiting, setVerifyOTPWaiting] = useState(false)
+  const [otpVerified, setOTPVerified] = useState(false)
 
   var loginInput = useRef()
   var otpTimestamp = useRef(null)
+  var userData = useRef()
 
   useEffect(()=>{
     loginInput.current.focus()
@@ -77,27 +80,29 @@ const Login = () => {
         }
       })
       .then((response) => {
-        // Successful API call
+        userData.current = response.data
         toast.success('OTP is sent to your WhatsApp number/email ID')
         setOtpSent(true)
         startOTPTimer()
       })
       .catch((error) => {
-        // Error occurred during API call
-        console.log(error.response.status)
         toast.error(error.response.status==404?`Invalid ${requestData.email?'Email ID':'WhatsApp number'}`:'Could not send OTP. Please contact the admin.')
       })
       .finally(()=>{
         setSendOTPWaiting(false)
+        loginInput.current.focus()
       })
   }
 
   const handleVerifyOtp = () => {
-
     const endpoint = '/api'
     const requestData = {
       id: `vseva-${inputID}`,
+      otp
     }
+
+    setVerifyOTPWaiting(true)
+    setVerifyOTPEnabled(false)
 
     axios.post(endpoint, requestData, {
         headers: {
@@ -106,12 +111,25 @@ const Login = () => {
         }
       })
       .then(() => {
-        console.log('response')
-        // window.open('/home', '_self')
+        Cookies.set('save', JSON.stringify(userData.current))
+        window.location.href = "/home"
       })
       .catch((error) => {
-        console.log(error)
-        toast.error('Unable to verify OTP. Please contact the admin.')
+        setOtp('')
+        toast.error((()=>{
+          switch(error.response.status){
+              case 403:
+                return 'Incorrect OTP! Please check and try again.'
+              case 404:
+                return 'OTP has expired! Refresh page and try again.'
+              default:
+                return 'Unable to verify OTP. Please contact the admin.'
+            }
+          })()
+        )
+      })
+      .finally(()=>{
+        setOTPVerified(true)
       })
   }
 
@@ -133,12 +151,16 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <img src="/img/header/logo.png" className="login-logo" />
-      <div className='login-title'>ISKCON Mysore Volunteering</div>
-      <label className='login-label-1'>
-       {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'phone'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
-      </label>
-      <form className='login-form'>
+      {otpVerified?
+      <div className='login-success'>
+        Login successful! Redirecting...
+      </div>
+      :<>
+        <img src="/img/header/logo.png" className="login-logo" />
+        <div className='login-title'>ISKCON Mysore Volunteering</div>
+        <label className='login-label-1'>
+        {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'phone'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
+        </label>
         <input
           type="text"
           value={otpSent?otp:inputID}
@@ -155,13 +177,13 @@ const Login = () => {
         >
           {otpSent?(verifyOTPWaiting?'Verifying...':'Verify OTP'):(sendOTPWaiting?'Sending...':'Send OTP')}
         </button>
-      </form>
 
-      {otpSent && (
-        <div className="login-timer">
-          <span>{`Your OTP expires in  ${Math.floor(secondsRemaining / 60).toString().padStart(2, '0')}:${Math.floor(secondsRemaining % 60 < 10 ? `0${secondsRemaining % 60}` : secondsRemaining % 60).toString().padStart(2, '0')}`}</span>
-        </div>
-      )}
+        {otpSent && (
+          <div className="login-timer">
+            <span>{`Your OTP expires in  ${Math.floor(secondsRemaining / 60).toString().padStart(2, '0')}:${Math.floor(secondsRemaining % 60 < 10 ? `0${secondsRemaining % 60}` : secondsRemaining % 60).toString().padStart(2, '0')}`}</span>
+          </div>
+        )}
+      </>}
     </div>
   )
 }
