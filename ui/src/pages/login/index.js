@@ -10,8 +10,12 @@ import { toast } from 'react-toastify'
 import Cookies from 'js-cookie'
 import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
+import _ from "../../_"
 
 const Login = () => {
+
+  _.auth()
+
   const otpExpirationSeconds = 300
   const [inputID, setinputID] = useState('')
   const [otp, setOtp] = useState('')
@@ -117,7 +121,7 @@ const Login = () => {
       })
       .then(() => {
         Cookies.set('save', JSON.stringify(userData.current))
-        window.location.href = "/home"
+        window.location.href = new URLSearchParams(window.location.search).get('redirect') || '/home'
       })
       .catch((error) => {
         setOtp('')

@@ -24,9 +24,24 @@ const getSave = ()=>{
 
 }
 
+const auth = ()=>{
+  if(window.location.pathname.startsWith('/login')){
+    if(Cookies.get('save')){
+      window.location.href = (()=>{
+        return new URLSearchParams(window.location.search).get('redirect') || '/home'
+      })()
+    } 
+  }else{
+    if(!Cookies.get('save')){
+      window.location.href = `/login?redirect=${window.location.pathname}`
+    }
+  }
+}
+
 const _ = {
     getInitials,
-    getSave
+    getSave,
+    auth
 }
 
 export default _
