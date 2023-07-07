@@ -94,3 +94,34 @@
     font-size: 3.5vw;
     margin-top: 2vw;
 }
+
+.form-radio-cont {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: stretch;
+    justify-content: flex-start;
+    margin: 1vw 0 1vw 0;
+}
+
+.form-radio-circle {
+    display: flex;
+    border: .5vw solid var(--surface);
+    height: 3vw;
+    width: 3vw;
+    border-radius: 50%;
+    margin: 0 2vw 0 2vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-radio-inner-circle {
+    background-color: var(--surface);
+    height: 50%;
+    width: 50%;
+    border-radius: 50%;
+}
+
+.input-radio {
+    margin-top: 4vw;
+}

@@ -4,15 +4,17 @@ import Header from '../../components/header';
 import API from '../../api';
 import _ from "../../_"
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
 function FormFeild(props){
 
-    var { label, desc, type, mandatory, processor, updater, validator } = props
+    var { label, desc, type, mandatory, processor, updater, validator, options } = props
 
     var [value, setValue] = useState('')
     var [valid, setValid] = useState(true)
 
     type = type || 'text'
+    options = options || []
 
     return(
         <div className={`form-feild-cont  ${valid?'':'ffinvalid'}`}>
@@ -48,6 +50,26 @@ function FormFeild(props){
                                         }}
                                         value={value}
                                     />
+                                )
+                            case "radio":
+                                return (
+                                    <div className='input-radio' onBlur={(e)=>{
+                                        console.log(e)
+                                    }}>
+                                        {
+                                            options.map(o=>{
+                                                return (
+                                                    <div    className='form-radio-cont'>
+                                                        <div className='form-radio-circle'>
+                                                            <div className='form-radio-inner-circle'></div>
+                                                        </div>
+                                                        <div className='form-radio-value'>{o}</div>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+
                                 )
                         }
                     })()
@@ -115,6 +137,36 @@ function FestForm(props){
                 label="Date of Birth"
                 type="date"
                 updater = {updaters.setDOB}
+                validator = {(v)=>{
+                    const minAge = moment().subtract(90, "years");
+                    const maxAge = moment().subtract(5, "years");
+                  
+                    if (!moment(v, "YYYY-MM-DD", true).isValid()) {
+                      return "Invalid date";
+                    }
+                  
+                    if (moment(v).isBefore(minAge) || moment(v).isAfter(maxAge)) {
+                      return "Date of birth outside acceptable range";
+                    }
+                }}
+                mandatory
+            />
+
+            <FormFeild
+                label="Gender"
+                type="radio"
+                options={['Male', 'Female']}
+                updater = {updaters.setGender}
+                validator = {(v)=>{
+                    const minAge = moment().subtract(90, "years");
+                    const maxAge = moment().subtract(5, "years");
+                    if (!moment(v, "YYYY-MM-DD", true).isValid()) {
+                      return "Invalid date";
+                    }
+                    if (moment(v).isBefore(minAge) || moment(v).isAfter(maxAge)) {
+                      return "Date of birth outside acceptable range";
+                    }
+                }}
                 mandatory
             />
         </div>
@@ -133,6 +185,7 @@ function RegForm(props){
     var [phone, setPhone] = useState()
     var [email, setEmail] = useState()
     var [dob, setDOB] = useState()
+    var [gender, setGender] = useState()
 
     useEffect(()=>{
         new API().call('/get-event-details', { id })
@@ -161,7 +214,8 @@ function RegForm(props){
                                         setName,
                                         setPhone,
                                         setEmail,
-                                        setDOB
+                                        setDOB,
+                                        setGender
                                     }
                                 }
                             />
