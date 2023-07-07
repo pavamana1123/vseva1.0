@@ -70,19 +70,43 @@ class API {
               })
             break
 
-            case "/get-festival-details":
+            case "/get-event-details":
               var { id } = body
               id = id.trim()
-              var isGroup = id.toLowerCase().endsWith('group')
-              var query = isGroup?`select * from festivalgroups where groupName='${id.toUpperCase().replaceAll('GROUP','Group')}';`:`select * from festivals where id='${id.toUpperCase()}';`
-              
-              this.db.execQuery(query)
-                .then((resp)=>{
-                  res.status(200).send(resp)
-                })
-                .catch((err)=>{
-                  this.sendError(res, 500, err)
-                })
+
+              try {
+                var group = await this.db.execQuery(`select * from eventgroups where groupId='${id}';`)
+                if(group.length){
+                  var events = await this.db.execQuery(`select * from events where groupId='${group[0].groupId}';`)
+                  res.status(200).send(
+                    {
+                      isGroup: true,
+                      group: group[0],
+                      events,
+                      dates: await this.db.execQuery(`select * from dates where ${events.map(e=>{
+                        return `eventId='${e.id}'`
+                      }).join(' or ')} order by date;`)
+                    }
+                  )
+                }else{
+                  var events = await this.db.execQuery(`select * from events where id='${id}';`)
+                  if(events.length){
+                    res.status(200).send(
+                      {
+                        isGroup: false,
+                        events: events[0],
+                        dates: await this.db.execQuery(`select * from dates where eventId='${events[0].id}' order by date;`)
+                      }
+                    )
+                  }else{
+                    this.sendError(res, 404, new Error(`Event ${id} does not exist`))
+                  }
+                }
+              } catch(err){
+                this.sendError(res, 500, err)
+              }
+
+
               break
 
             default:

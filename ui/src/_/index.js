@@ -38,10 +38,15 @@ const auth = ()=>{
   }
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const phoneRegex = /^\d{10}$/
+
 const _ = {
     getInitials,
     getSave,
-    auth
+    auth,
+    emailRegex,
+    phoneRegex
 }
 
 export default _

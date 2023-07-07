@@ -1,14 +1,10 @@
 .reg-container {
-    display: flex;
-    height: 100vh;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    white-space: pre;
     text-align: center;
+    max-height: 80vh;
+    overflow-y: scroll;
 }
 
-.fest-container {
+.event-form-container {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -16,55 +12,85 @@
     align-items: center;
 }
 
-.fest-header {
+.event-form-header {
     display: flex;
-    flex-direction: row;
-    background: white;
-}
-
-.fest-logo-cont {
-    display: flex;
-    width: 30vw;
-    height: 30vw;
-    align-items: center;
-    justify-content: center;
-}
-
-.fest-logo {
-    display: flex;
-    background: aliceblue;
-    width: 25vw;
-    height: 25vw;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    font-size: 6vw;
-    text-transform: uppercase;
-}
-
-.fest-title {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    text-wrap: balance;
-}
-
-.fest-name {
-    font-weight: bold;
-    font-size: 6vw;
-    margin-bottom: 2vw;
-}
-
-.fest-desc {
-    display: flex;
-    flex-direction: column;
-    max-height: 50vh;
     background: white;
     width: 90vw;
-    padding: 2vw;
-    text-wrap: balance;
-    border-radius: 1vw;
+    flex-direction: column;
+    white-space: pre-wrap; 
     margin: 2vw 0 2vw 0;
-    box-shadow: -1px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 1.5vw;
+}
+
+.event-form-title {
+    color: #333;
+    font-weight: 700;
+    font-size: 5vw;
+    margin-top: 3vw;
+}
+
+.event-form-description {
+    text-align: left;
+    color: #333;
+    font-size: 3.5vw;
+    white-space: pre-wrap;
+    margin: 2vw;
+}
+
+.event-form-hr {
+    width: 100%;
+    height: 0px;
+}
+
+
+.form-feild-cont {
+    display: flex;
+    width: 90vw;
+    background: white;
+    white-space: pre-wrap;
+    border-radius: 1.5vw;
+    margin: 2vw 0 2vw 0;
+}
+
+.form-feild-marginer {
+    display: flex;
+    flex-direction: column;
+    margin: 4vw;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.form-feild-label {
+    font-size: 3.8vw;
+    text-align: left;
+}
+
+.form-feild-mandatory {
+    color: red;
+}
+
+.form-feild-input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    outline: none;
+    width: 95%;
+    padding: 1vw;
+    font-size: 4vw;
+    margin-top: 4vw;
+    border-bottom: #aaa 2px solid
+}
+
+.form-feild-input:focus {
+    border-bottom: var(--surface) 2px solid
+}
+
+.ffinvalid {
+    border: var(--warning) 1px solid;
+}
+
+.form-feild-warning {
+    color: var(--warning);
+    font-size: 3.5vw;
+    margin-top: 2vw;
 }

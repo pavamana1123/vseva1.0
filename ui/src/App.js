@@ -8,7 +8,7 @@ import Login from './pages/login';
 import Buddies from './pages/buddies';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import RegForm from './pages/RegForm';
+import RegForm from './pages/regForm';
 
 function App() {
 

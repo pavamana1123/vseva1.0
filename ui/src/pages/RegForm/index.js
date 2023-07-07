@@ -5,30 +5,118 @@ import API from '../../api';
 import _ from "../../_"
 import { useParams } from 'react-router-dom';
 
+function FormFeild(props){
+
+    var { label, desc, type, mandatory, processor, updater, validator } = props
+
+    var [value, setValue] = useState('')
+    var [valid, setValid] = useState(true)
+
+    type = type || 'text'
+
+    return(
+        <div className={`form-feild-cont  ${valid?'':'ffinvalid'}`}>
+            <div className='form-feild-marginer'>
+                <div className='form-feild-label'>
+                    <span>{label}</span>
+                    {mandatory && <span className='form-feild-mandatory'>{' *'}</span>}
+                </div>
+                {desc && <div className='form-feild-desc'>
+                    {desc}
+                </div>}
+                {
+                    (()=>{
+                        switch(type){
+                            case 'tel':
+                            case 'email':
+                            case 'date':
+                            case 'text':
+                                return (
+                                    <input
+                                        className={`form-feild-input fftext`}
+                                        type={type}
+                                        onBlur={(e)=>{
+                                            var processedValue = (processor?processor(e.target.value):e.target.value)
+
+                                            updater(processedValue)
+                                            setValue(processedValue)
+                                            setValid((mandatory?e.target.value!='':true) && (validator?!validator(processedValue):true))
+                                        }}
+                                        onChange={(e)=>{
+                                            setValue(e.target.value)
+                                            updater(e.target.value)
+                                        }}
+                                        value={value}
+                                    />
+                                )
+                        }
+                    })()
+                }
+                <div className='form-feild-warning'>
+                    {!valid? validator? validator(value):'* This is a mandatory feild':''}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function FestForm(props){
-    var { festivalData } = props
+    var { eventData, updaters } = props
 
     return (
-        <div className='fest-container'>
-            <div className='fest-header'>
-                <div className='fest-logo-cont'>
-                    <div className='fest-logo'>
-                        SKJ
-                    </div>
+        <div className='event-form-container'>
+            <div className='event-form-header'>
+                <div className='event-form-title'>
+                    {eventData.isGroup? eventData.group.name: eventData.events.name}
                 </div>
-                <div className='fest-title'>
-                    <div className='fest-name'>Sri Krishna Janmasthtami</div>
-                    <div className='fest-dates'>September 6th & 7th</div>
+                <hr className='event-form-hr'/>
+                <div className='event-form-description'>
+                    {eventData.isGroup? eventData.group.formDesc: eventData.events.formDesc}
                 </div>
             </div>
-            <div className='fest-desc'>
-                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-            </div>
-            <div className='fest-phone-check'>
-                <label>Enter your 10-digit phone number to proceed</label>
-                <input type='text' className='fest-phone'/>
-                <button>Proceed</button>
-            </div>
+
+            <FormFeild
+                label="Enter your full-name"
+                type="text"
+                processor = {(v)=>{
+                    return (v || '').toNameCase()
+                }}
+                updater = {updaters.setName}
+                mandatory
+            />
+
+            <FormFeild
+                label="Enter your 10-digit mobile number (preferably WhatsApp number)"
+                type="tel"
+                processor = {(v)=>{
+                    return (v || '').toPhoneCase()
+                }}
+                updater = {updaters.setPhone}
+                validator = {(v)=>{
+                    if(!_.phoneRegex.test(v)){
+                        return 'Invalid phone number!'
+                    }
+                }}
+                mandatory
+            />
+
+            <FormFeild
+                label="Enter E-mail ID"
+                type="email"
+                updater = {updaters.setEmail}
+                validator = {(v)=>{
+                    if(!_.emailRegex.test(v)){
+                        return 'Invalid E-mail!'
+                    }
+                }}
+            />
+
+            <FormFeild
+                label="Date of Birth"
+                type="date"
+                updater = {updaters.setDOB}
+                mandatory
+            />
         </div>
     )
 }
@@ -37,20 +125,25 @@ function RegForm(props){
 
     var { id } = useParams()
 
-    var [festivalDataReady, setFestivalDataReady] = useState(false)
-    var [festivalData, setFestivalData] = useState()
-    var [festivalDataError, setFestivalDataError] = useState(false)
+    var [eventDataReady, setEventDataReady] = useState(false)
+    var [eventData, setEventData] = useState()
+    var [eventDataError, setEventDataError] = useState(false)
+
+    var [name, setName] = useState()
+    var [phone, setPhone] = useState()
+    var [email, setEmail] = useState()
+    var [dob, setDOB] = useState()
 
     useEffect(()=>{
-        new API().call('/get-festival-details', { id })
+        new API().call('/get-event-details', { id })
         .then((resp)=>{
-            setFestivalData(resp.data)
+            setEventData(resp.data)
         })
         .catch((err)=>{
-            setFestivalDataError(true)
+            setEventDataError(true)
         })
         .finally(()=>{
-            setFestivalDataReady(true)
+            setEventDataReady(true)
         })
     }, [])
 
@@ -59,16 +152,26 @@ function RegForm(props){
             <Header hideMenus/>
             <div className='reg-container'>
                 {
-                    festivalDataReady?
-                        festivalData.length!=0?
-                            <FestForm festivalData={festivalData}/>
+                    eventDataReady?
+                        eventData.length!=0?
+                            <FestForm
+                                eventData={eventData}
+                                updaters = {
+                                    {
+                                        setName,
+                                        setPhone,
+                                        setEmail,
+                                        setDOB
+                                    }
+                                }
+                            />
                             :
                             <div className='reg-data-loading'>
-                                {`No festivals found with name ${id}`}
+                                {`No events found with name ${id}`}
                             </div>
                     :
                     <div className='reg-data-loading'>
-                        {festivalDataError?'Unable to load form!':'Hare Krishna!\nLoading registration form...'}
+                        {eventDataError?'Unable to load form!':'Hare Krishna!\nLoading registration form...'}
                     </div>
                 }
             </div>
