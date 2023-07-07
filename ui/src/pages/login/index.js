@@ -6,8 +6,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
-import { toast } from 'react-toastify'
 import Cookies from 'js-cookie'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
 import _ from "../../_"
