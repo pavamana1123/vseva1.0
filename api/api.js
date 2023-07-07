@@ -2,6 +2,32 @@ var cred = require("./cred.js")
 const sync = require("./sync.js")
 const axios = require('axios')
 
+function getNextUsername(str) {
+  const matches = str.match(/(\d+)$/);
+  if (matches && matches.length > 0) {
+    const num = parseInt(matches[0]);
+    const nextNum = num + 1;
+    return str.replace(/(\d+)$/, nextNum.toString());
+  } else {
+    return str + "1";
+  }
+}
+
+function closestName(input, array) {
+  let closestMatch;
+  let closestDistance = Infinity;
+
+  for (let i = 0; i < array.length; i++) {
+    const currentDistance = natural.JaroWinklerDistance(input, array[i]);
+    if (currentDistance < closestDistance) {
+      closestDistance = currentDistance;
+      closestMatch = array[i];
+    }
+  }
+
+  return closestMatch;
+}
+
 class API {
     constructor(db){
         this.db = db
@@ -107,6 +133,81 @@ class API {
               }
 
 
+              break
+
+            case "/submit-availability":
+
+              var { id, isGroup, name, phone, email, dob, gender, japaRounds, category ,preacher, availability } = body
+
+              var username
+
+              try {
+                var volunteer = await this.db.execQuery(`select * from volunteers where phone='${phone}'`)
+                if(volunteer.length){
+                  var matchingName = closestName(name, volunteer.map(v=>{ return v.name }))
+                  var matchingVolunteer = volunteer.filter(v=>{ return v.name==matchingName })[0]
+                  username = matchingVolunteer.username
+                  await this.db.execQuery(`UPDATE volunteers
+                    SET
+                      name = '${name}',
+                      dob = '${dob}',
+                      ${email?`email = '${email}'`:""}
+                      gender = '${gender}',
+                      japaRounds = ${japaRounds},
+                      category = '${category}',
+                      preacher = '${preacher}'
+                    WHERE username = '${username}';
+                  `)
+                }else{
+                  username = name.replace(/\s/g, '').toLowerCase()
+                  volunteer = await this.db.execQuery(`select * from volunteers where username='${username}'`)
+                  if(volunteer.length){
+                    username = getNextUsername(username)
+                  }
+                  this.db.execQuery(`INSERT INTO volunteers
+                    (
+                      username,
+                      name,
+                      phone,
+                      dob,
+                      email,
+                      gender,
+                      japaRounds,
+                      category,
+                      preacher
+                    )
+                    VALUES
+                    (
+                      '${username}',
+                      '${name}',
+                      '${phone}',
+                      '${dob}',
+                      '${email}',
+                      '${gender}',
+                      ${japaRounds},
+                      '${category}',
+                      '${preacher}'
+                    );
+                  `)
+                  
+                }
+
+                Object.keys(availability).forEach(key=>{
+                  var idDatePair = key
+                  var eventId = idDatePair.split(":")[0]
+                  var date = idDatePair.split(":")[1]
+
+                  this.db.execQuery(`INSERT INTO availability (eventId, date, username, availability)
+                    VALUES ('${eventId}', '${date}', '${username}', '${availability}')
+                  ON DUPLICATE KEY UPDATE
+                    availability = VALUES(availability);`)
+                })
+
+                res.status(200).send()
+
+              }catch(err){
+                this.sendError(res, 500, err)
+              }
               break
 
             default:
