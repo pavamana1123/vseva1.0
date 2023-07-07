@@ -95,13 +95,17 @@
     margin-top: 2vw;
 }
 
-.form-radio-cont {
+.form-radio-cont, .form-checkbox-cont {
     display: flex;
     flex-direction: row;
     width: 100%;
     align-items: stretch;
     justify-content: flex-start;
     margin: 1vw 0 1vw 0;
+}
+
+.form-checkbox-cont {
+    align-items: center;
 }
 
 .form-radio-circle {
@@ -116,12 +120,26 @@
 }
 
 .form-radio-inner-circle {
+    background-color: white;
+    height: 50%;
+    width: 50%;
+    border-radius: 50%;
+}
+
+.form-radio-inner-circle-sel {
     background-color: var(--surface);
     height: 50%;
     width: 50%;
     border-radius: 50%;
 }
 
-.input-radio {
+.input-radio, .input-checkbox {
     margin-top: 4vw;
+}
+
+.form-checkbox-box {
+    color: var(--surface);
+    font-weight: 500;
+    font-size: 6vw;
+    margin: 0 2vw 0 2vw;
 }

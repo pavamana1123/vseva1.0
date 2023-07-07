@@ -41,12 +41,25 @@ const auth = ()=>{
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const phoneRegex = /^\d{10}$/
 
+const preacherList = [  
+  'Alarnath Dasa',
+  'Hiranyavarna Dasa',
+  'Krishna Keshav Dasa',
+  'Karunya Sagar Dasa',
+  'Mahapurana Dasa',
+  'Pankajanghri Dasa',
+  'Pavan Prana Dasa',
+  'Sanaka Kumar Dasa',
+  'Saumya Rupa Krishna Dasa',
+  'Vishnu Charan Dasa']
+
 const _ = {
     getInitials,
     getSave,
     auth,
     emailRegex,
-    phoneRegex
+    phoneRegex,
+    preacherList
 }
 
 export default _
