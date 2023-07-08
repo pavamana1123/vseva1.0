@@ -1,7 +1,7 @@
 var cred = require("./cred.js")
 const sync = require("./sync.js")
 const axios = require('axios')
-const axios = require('natural')
+const natural = require('natural')
 
 function getNextUsername(str) {
   const matches = str.match(/(\d+)$/);
