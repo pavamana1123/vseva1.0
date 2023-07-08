@@ -76,7 +76,7 @@ function RegForm(props){
     return (
         <div className='reg-root'>
             <Header hideMenus/>
-            <button onClick={testclick}>OK</button>
+            {/* <button onClick={testclick}>OK</button> */}
             <div className='reg-container'>
                 {
                     componentData.dataReady?
