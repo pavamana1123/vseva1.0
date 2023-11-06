@@ -6,11 +6,13 @@ import _ from "../../_"
 
 function Home(props){
 
-    _.auth()
+    // _.auth()
 
     return (
         <div>
-            Hare Krishna
+            <Header>
+                VServe
+            </Header>
         </div>
     )
 }

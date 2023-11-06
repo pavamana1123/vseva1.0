@@ -41,7 +41,7 @@ function Header(props) {
           <div className='header-user-det-cont'>
             <div className='header-user-det-dp-cont'>
               <div className='header-user-det-dp'>
-                { _.getInitials(save.name) }
+                {_.getInitials(save.name)}
               </div>
             </div>
             <div className='header-user-det'>
