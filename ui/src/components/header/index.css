@@ -12,6 +12,7 @@
 
 #header-menu {
     padding: 2.5%;
+    width: 5vw;
 }
 
 #header-logo {
@@ -20,6 +21,7 @@
 
 #header-dots {
     padding: 2.2%;
+    width: 7.5vw;
 }
 
 .header-menu {
@@ -100,12 +102,12 @@
     height: 15vw;
 }
 
-.header-user-det-dp {
+#header-dp-init {
     display: flex;
     background-color: var(--surface);
     border-radius: 100%;
-    width: 12vw;
-    height: 12vw;
+    width: 8vw;
+    height: 8vw;
     margin: 1.2vw;
     align-items: center;
     justify-content: center;
