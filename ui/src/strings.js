@@ -53,7 +53,6 @@ String.prototype.color = function() {
     '#03A9F4', // Light Blue
     '#00BCD4', // Cyan
     '#607D8B', // Blue Grey
-    '#9E9E9E', // Grey
     '#F44336', // Red
     '#2196F3', // Light Blue
     '#4CAF50', // Green
@@ -61,9 +60,7 @@ String.prototype.color = function() {
     '#673AB7', // Deep Purple
     '#03A9F4', // Light Blue
     '#4CAF50', // Green
-    '#2196F3', // Blue
-    '#607D8B', // Blue Grey
-    '#9E9E9E'  // Grey
+    '#2196F3' // Blue
   ]
 
   return lightMaterialColors[sum % lightMaterialColors.length];

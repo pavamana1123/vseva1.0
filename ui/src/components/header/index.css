@@ -32,7 +32,7 @@
     height: 100vh;
     box-shadow: 1vw 0vw 1vw rgba(128, 128, 128, 0.384);
     transition: transform .3s ease-in-out;
-    transform: translateX(-120%);
+    transform: translateX(-105%);
     z-index: 1000;
 }
 
@@ -102,17 +102,23 @@
     height: 15vw;
 }
 
-#header-dp-init {
+.header-dp-init.hide {
+    transform: scale(0);
+}
+
+.header-dp-init {
     display: flex;
     background-color: var(--surface);
     border-radius: 100%;
-    width: 8vw;
-    height: 8vw;
-    margin: 1.2vw;
+    width: 7vw;
+    height: 7vw;
+    margin: 1.2vw 2vw 1.2vw 1.2vw;
     align-items: center;
     justify-content: center;
     font-size: 3vw;
     color: white;
+    border: .2vw solid wheat;
+    transition: transform .2s ease-in-out;
 }
 
 .header-user-det-dp-cont {

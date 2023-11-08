@@ -9,6 +9,7 @@ function Header(props) {
 
   var [menuOpen, setMenuOpen] = useState(false);
   var [contextMenuOpen, setContextMenuOpen] = useState(false);
+  var [userProfileOpen, setUserProfileOpen] = useState(false);
 
   const toggleMenu = ()=>{
     setMenuOpen(!menuOpen)
@@ -16,6 +17,14 @@ function Header(props) {
 
   const toggleContextMenu = ()=>{
     setContextMenuOpen(!contextMenuOpen)
+  }
+
+  const showUserProfile = ()=>{
+    setUserProfileOpen(true)
+  }
+
+  const hideUserProfile = ()=>{
+    setUserProfileOpen(false)
   }
 
   const closeMenu = ()=>{
@@ -31,9 +40,9 @@ function Header(props) {
   return (
     <div className="header-holder">
       <div className='header'>
-          <img src="img/header/menu.png" id="header-menu" onClick={toggleMenu}/>
+          <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
-          <div id="header-dp-init" style={{background: save.current.name.color()}}>{_.getInitials(save.current.name)}</div>
+          <div className={`header-dp-init ${userProfileOpen?'hide':''}`} style={{background: save.current.name.color()}} onClick={showUserProfile}>{_.getInitials(save.current.name)}</div>
       </div>
 
       <div className={`header-menu ${menuOpen?'open':''}`}>
@@ -60,6 +69,8 @@ function Header(props) {
       <div className={`header-contextmenu ${contextMenuOpen?'open':''}`}>
         {children}
       </div>
+
+      <div></div>
 
       <div className={`header-menuglass ${!menuOpen?'hide':''}`} onClick={closeMenu}>
       </div>
