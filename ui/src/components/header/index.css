@@ -10,6 +10,22 @@
     align-items: center;
 }
 
+.user-menu {
+    background-color: var(--bar);
+    height: 94.5vh;
+    color: white;
+    position: absolute;
+    width: 100vw;
+    animation: fadein .3s ease-in-out 0s;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile-header {
+    display: flex;
+}
+
 #header-menu {
     padding: 2.5%;
     width: 5vw;
@@ -106,7 +122,7 @@
     transform: scale(0);
 }
 
-.header-dp-init {
+.header-dp-init, .user-profle-dp {
     display: flex;
     background-color: var(--surface);
     border-radius: 100%;
@@ -119,6 +135,12 @@
     color: white;
     border: .2vw solid wheat;
     transition: transform .2s ease-in-out;
+}
+
+.user-profle-dp {
+    width: 20vw;
+    height: 20vw;
+    font-size: 8vw;
 }
 
 .header-user-det-dp-cont {
@@ -187,4 +209,14 @@
     font-size: 6vw;
     color: white;
     font-weight: 500;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

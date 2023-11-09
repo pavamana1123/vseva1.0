@@ -45,6 +45,12 @@ function Header(props) {
           <div className={`header-dp-init ${userProfileOpen?'hide':''}`} style={{background: save.current.name.color()}} onClick={showUserProfile}>{_.getInitials(save.current.name)}</div>
       </div>
 
+      {userProfileOpen && <div className={`user-menu`}> 
+        <div className='user-profile-header'>
+          <div className={`header-dp-init user-profle-dp`} style={{background: save.current.name.color()}}>{_.getInitials(save.current.name)}</div>
+        </div>
+      </div>}
+
       <div className={`header-menu ${menuOpen?'open':''}`}>
         <div className='header-menu-cont'>
           <div className='header-menu-items-cont'>

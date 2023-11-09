@@ -10,9 +10,7 @@ function Home(props){
 
     return (
         <div>
-            <Header>
-                VServe
-            </Header>
+            <Header/>
         </div>
     )
 }
