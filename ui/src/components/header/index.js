@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './index.css';
 import _ from "../../_"
 import menu from "../../menu"
@@ -8,8 +8,15 @@ function Header(props) {
   var {children} = props
 
   var [menuOpen, setMenuOpen] = useState(false);
+  var [user, setUser] = useState(false);
   var [contextMenuOpen, setContextMenuOpen] = useState(false);
   var [userProfileOpen, setUserProfileOpen] = useState(false);
+
+  useEffect(()=>{
+    let save = _.getSave()
+    console.log(save)
+    setUser(save.users[save.index])
+  }, [])
 
   const toggleMenu = ()=>{
     setMenuOpen(!menuOpen)
@@ -35,19 +42,21 @@ function Header(props) {
     setContextMenuOpen(false)
   }
 
-  const save =  useRef(_.getSave())
-
   return (
-    <div className="header-holder">
+    user && <div className="header-holder">
       <div className='header'>
           <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
-          <div className={`header-dp-init ${userProfileOpen?'hide':''}`} style={{background: save.current.name.color()}} onClick={showUserProfile}>{_.getInitials(save.current.name)}</div>
+          <div className={`header-dp ${userProfileOpen?'hide':''}`} style={{background: user.name.color()}} onClick={showUserProfile}>{_.getInitials(user.name)}</div>
       </div>
 
-      {userProfileOpen && <div className={`user-menu`}> 
-        <div className='user-profile-header'>
-          <div className={`header-dp-init user-profle-dp`} style={{background: save.current.name.color()}}>{_.getInitials(save.current.name)}</div>
+      {userProfileOpen && <div className={`header-user-menu`}> 
+        <div className='header-user-profile-header'>
+            <div className={`header-dp header-user-profle-dp`} style={{background: user.name.color()}}>{_.getInitials(user.name)}</div>
+            <div className='header-user-details'>
+              <div className='header-username'>{user.name}</div>
+              <div className='header-userrole'>{user.role.name}</div>
+            </div>
         </div>
       </div>}
 
