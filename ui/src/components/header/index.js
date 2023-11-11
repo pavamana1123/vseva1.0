@@ -58,6 +58,17 @@ function Header(props) {
               <div className='header-userrole'>{user.role.name}</div>
             </div>
         </div>
+        <hr className='header-user-hr'/>
+
+        <div className='header-actions'>
+          <div className='header-action-label'>ACTIONS</div>
+          <div className='header-action-list'>
+            <div className='header-action-item'>Edit Profile</div>
+            <div className='header-action-item'>Add User</div>
+            <div className='header-action-item'>Notifications</div>
+          </div>
+
+        </div>
       </div>}
 
       <div className={`header-menu ${menuOpen?'open':''}`}>
