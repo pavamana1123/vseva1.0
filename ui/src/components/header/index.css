@@ -254,6 +254,14 @@
     font-weight: 500;
 }
 
+.header-user-menu-icons {
+    width: 6vw;
+}
+
+.header-action {
+    display: flex;
+}
+
 @keyframes fadein {
     0% {
         opacity: 0;
