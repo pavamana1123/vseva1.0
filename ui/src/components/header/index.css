@@ -186,6 +186,12 @@
     margin-left: 5vw;
 }
 
+.header-user-switch-dp {
+    width: 10vw;
+    height: 10vw;
+    font-size: 3.5vw;
+}
+
 .header-user-det-dp-cont {
     display: flex;
     flex: 0 0 30%;
@@ -260,6 +266,7 @@
 
 .header-action {
     display: flex;
+    align-items: center;
 }
 
 @keyframes fadein {

@@ -8,14 +8,13 @@ function Header(props) {
   var {children} = props
 
   var [menuOpen, setMenuOpen] = useState(false);
-  var [user, setUser] = useState(false);
+  var [user, setUser] = useState();
   var [contextMenuOpen, setContextMenuOpen] = useState(false);
   var [userProfileOpen, setUserProfileOpen] = useState(false);
 
+  let save = useRef(_.getSave())
   useEffect(()=>{
-    let save = _.getSave()
-    console.log(save)
-    setUser(save.users[save.index])
+    setUser(save.current.users[save.current.index])
   }, [])
 
   const toggleMenu = ()=>{
@@ -43,7 +42,7 @@ function Header(props) {
   }
 
   return (
-    user && <div className="header-holder">
+    user?<div className="header-holder">
       <div className='header'>
           <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
@@ -83,30 +82,28 @@ function Header(props) {
 
         </div>
 
-        <hr className='header-user-hr'/>
+        {user && save.current.users.length>1?        
+          <>
+            <hr className='header-user-hr'/>
 
-        <div className='header-accounts'>
-          <div className='header-action-label'>SWITCH ACCOUNTS</div>
-          <div className='header-action-list'>
-            
-            <div className='header-action'>
-              <img src="img/header/edit-profile.svg" className='header-user-menu-icons header-action-icon'/>
-              <div className='header-action-item'>Edit Profile</div>
+            <div className='header-accounts'>
+              <div className='header-action-label'>SWITCH ACCOUNTS</div>
+              <div className='header-action-list'>
+                {
+                  save.current.users.filter(u=>{
+                    return u.name!=user.name
+                  }).map(u=>{
+                    return <div className='header-action'>
+                      <div className={`header-dp header-user-switch-dp`} style={{background: u.name.color()}}>{_.getInitials(u.name)}</div>
+                      <div className='header-action-item'>{u.name}</div>
+                    </div>
+                  })
+                }
+              </div>
+
             </div>
-
-            <div className='header-action'>
-              <img src="img/header/add-account.svg" className='header-user-menu-icons header-action-icon'/>
-              <div className='header-action-item'>Add User</div>
-            </div>
-
-            <div className='header-action'>
-              <img src="img/header/notifications.svg" className='header-user-menu-icons header-action-icon'/>
-              <div className='header-action-item'>Notifications</div>
-            </div>
-            
-          </div>
-
-</div>
+          </>:null
+        }
 
       </div>}
 
@@ -141,9 +138,7 @@ function Header(props) {
       </div>
       {contextMenuOpen?<div className={`header-contextmenuglass`} onClick={closeContextMenu}>
       </div>:null}
-    </div>
-
-
+    </div>:null
   );
 }
 
