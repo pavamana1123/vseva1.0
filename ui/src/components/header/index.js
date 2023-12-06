@@ -1,20 +1,37 @@
-import { useEffect, useRef, useState } from 'react';
-import './index.css';
+import { useEffect, useRef, useState } from 'react'
+import './index.css'
 import _ from "../../_"
 import menu from "../../menu"
+import axios from 'axios'
 
+const cdnBase = 'https://cdn.iskconmysore.org/vseva/dp'
 
 function Header(props) {
   var {children} = props
 
-  var [menuOpen, setMenuOpen] = useState(false);
-  var [user, setUser] = useState();
-  var [contextMenuOpen, setContextMenuOpen] = useState(false);
-  var [userProfileOpen, setUserProfileOpen] = useState(false);
+  var [menuOpen, setMenuOpen] = useState(false)
+  var [user, setUser] = useState()
+  var [contextMenuOpen, setContextMenuOpen] = useState(false)
+  var [userProfileOpen, setUserProfileOpen] = useState(false)
+  var [userDpFound, setUserDpFound] = useState(false)
 
   let save = useRef(_.getSave())
+
   useEffect(()=>{
-    setUser(save.current.users[save.current.index])
+    var currentUser = save.current.users[save.current.index]
+    setUser(currentUser)
+
+    axios.head(`${cdnBase}/${currentUser.id}.jpg`)
+    .then(()=>{
+      setUserDpFound(true)
+    })
+    .catch(error => {
+      if (error.response) {
+        console.log(`Error loading dp: ${error.response}`)
+      } else {
+        console.log(`Unknown error loading dp!`)
+      }
+    })
   }, [])
 
   const toggleMenu = ()=>{
