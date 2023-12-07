@@ -4,7 +4,7 @@ import _ from "../../_"
 import menu from "../../menu"
 import axios from 'axios'
 
-const cdnBase = 'https://cdn.iskconmysore.org/vseva/dp'
+const cdnBase = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
 
 function Header(props) {
   var {children} = props
@@ -27,7 +27,7 @@ function Header(props) {
     })
     .catch(error => {
       if (error.response) {
-        console.log(`Error loading dp: ${error.response}`)
+        console.log(`Error loading dp:`, error.response)
       } else {
         console.log(`Unknown error loading dp!`)
       }
