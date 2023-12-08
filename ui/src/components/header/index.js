@@ -13,7 +13,7 @@ function Header(props) {
   var [user, setUser] = useState()
   var [contextMenuOpen, setContextMenuOpen] = useState(false)
   var [userProfileOpen, setUserProfileOpen] = useState(false)
-  var [userDpFound, setUserDpFound] = useState(false)
+  var [dpParams, setDpParams] = useState({})
 
   let save = useRef(_.getSave())
 
@@ -23,9 +23,26 @@ function Header(props) {
 
     axios.head(`${cdnBase}/${currentUser.id}.jpg`)
     .then(()=>{
-      setUserDpFound(true)
+      setDpParams({
+        dpFound: true,
+        background: {
+          backgroundImage: `url(${cdnBase}/${currentUser.id}.jpg)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        },
+        text: ""
+      })
     })
     .catch(error => {
+
+      setDpParams({
+        dpFound: false,
+        background: {
+          background: currentUser.name.color()
+        },
+        text: _.getInitials(user.name)
+      })
+
       if (error.response) {
         console.log(`Error loading dp:`, error.response)
       } else {
@@ -58,17 +75,19 @@ function Header(props) {
     setContextMenuOpen(false)
   }
 
+  var currentUser = save.current.users[save.current.index]
+
   return (
     user?<div className="header-holder">
       <div className='header'>
           <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
-          <div className={`header-dp ${userProfileOpen?'hide':''}`} style={{background: user.name.color()}} onClick={showUserProfile}>{_.getInitials(user.name)}</div>
+          <div className={`header-dp ${userProfileOpen?'hide':''}`} style={dpParams.background} onClick={showUserProfile}>{dpParams.text}</div>
       </div>
 
       {userProfileOpen && <div className={`header-user-menu`}> 
         <div className='header-user-profile-header'>
-            <div className={`header-dp header-user-profle-dp`} style={{background: user.name.color()}}>{_.getInitials(user.name)}</div>
+            <div className={`header-dp header-user-profle-dp`} style={dpParams.background}>{dpParams.text}</div>
             <div className='header-user-details'>
               <div className='header-username'>{user.name}</div>
               <div className='header-userrole'>{user.role.name}</div>
@@ -111,7 +130,7 @@ function Header(props) {
                     return u.name!=user.name
                   }).map(u=>{
                     return <div className='header-action'>
-                      <div className={`header-dp header-user-switch-dp`} style={{background: u.name.color()}}>{_.getInitials(u.name)}</div>
+                      <div className={`header-dp header-user-switch-dp`} style={dpParams.background}>{dpParams.text}</div>
                       <div className='header-action-item'>{u.name}</div>
                     </div>
                   })
