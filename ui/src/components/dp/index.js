@@ -8,24 +8,23 @@ const cdnBase = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
 function DP(props) {
   var {user, className, onClick} = props
 
-  console.log(user.name.initial())
-
   var [background, setBackground] = useState({
-    background: user.name.color()
-  })
-  var [text, setText] = useState(user.name.initial())
+    backgroundImage: `url(${cdnBase}/${user.id}.jpg)`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+})
+  var [text, setText] = useState("")
 
   useEffect(()=>{
     axios.head(`${cdnBase}/${user.id}.jpg`)
     .then(()=>{
-      setBackground({
-          backgroundImage: `url(${cdnBase}/${user.id}.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-      })
-      setText("")
+
     })
     .catch(error => {
+        setBackground({
+            background: user.name.color()
+        })
+        setText(user.name.initial())
         console.log("Unable to load DP for user id: ", user.id, error)
     })
   }, [])
