@@ -1,0 +1,13 @@
+.header-dp {
+    display: flex;
+    background-color: var(--surface);
+    border-radius: 100%;
+    width: 7vw;
+    height: 7vw;
+    margin: 1.2vw 2vw 1.2vw 1.2vw;
+    align-items: center;
+    justify-content: center;
+    font-size: 3vw;
+    color: white;
+    border: .2vw solid wheat;
+}

@@ -3,6 +3,7 @@ import './index.css'
 import _ from "../../_"
 import menu from "../../menu"
 import axios from 'axios'
+import DP from '../dp'
 
 const cdnBase = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
 
@@ -40,7 +41,7 @@ function Header(props) {
         background: {
           background: currentUser.name.color()
         },
-        text: _.getInitials(user.name)
+        text: user.name.initial()
       })
 
       if (error.response) {
@@ -82,12 +83,12 @@ function Header(props) {
       <div className='header'>
           <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
-          <div className={`header-dp ${userProfileOpen?'hide':''}`} style={dpParams.background} onClick={showUserProfile}>{dpParams.text}</div>
+          <DP onClick={showUserProfile} user={user}/>
       </div>
 
       {userProfileOpen && <div className={`header-user-menu`}> 
         <div className='header-user-profile-header'>
-            <div className={`header-dp header-user-profle-dp`} style={dpParams.background}>{dpParams.text}</div>
+            <DP user={user}/>
             <div className='header-user-details'>
               <div className='header-username'>{user.name}</div>
               <div className='header-userrole'>{user.role.name}</div>
@@ -130,7 +131,7 @@ function Header(props) {
                     return u.name!=user.name
                   }).map(u=>{
                     return <div className='header-action'>
-                      <div className={`header-dp header-user-switch-dp`} style={dpParams.background}>{dpParams.text}</div>
+                      <DP user={u}/>
                       <div className='header-action-item'>{u.name}</div>
                     </div>
                   })

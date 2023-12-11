@@ -29,7 +29,7 @@ const Buddy = (props)=>{
                 <div className='buddy-det-cont'>
                     <div className='buddy-dp-holder'>
                         <div className='buddy-dp-text'>
-                            {_.getInitials(buddy.name)}
+                            {buddy.name.initial()}
                         </div>
                     </div>
                     <div className='buddy-details'>
