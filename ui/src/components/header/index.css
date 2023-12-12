@@ -125,19 +125,12 @@
     transform: scale(0);
 }
 
-.header-dp, .user-profle-dp {
-    display: flex;
-    background-color: var(--surface);
-    border-radius: 100%;
-    width: 7vw;
-    height: 7vw;
-    margin: 1.2vw 2vw 1.2vw 1.2vw;
-    align-items: center;
-    justify-content: center;
-    font-size: 3vw;
-    color: white;
-    border: .2vw solid wheat;
+.header-dp {
     transition: transform .1s ease-in-out;
+}
+
+.user-profle-dp {
+    margin-left: 5vw !important;
 }
 
 .header-user-details {
@@ -267,6 +260,7 @@
 .header-action {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 @keyframes fadein {

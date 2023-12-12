@@ -6,7 +6,17 @@ import axios from 'axios'
 const cdnBase = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
 
 function DP(props) {
-  var {user, className, onClick} = props
+  var {user, size, className, onClick} = props
+
+  className = className || ""
+
+  var sz = {}
+  if(size){
+    sz = {
+      width: size,
+      height: size
+    }
+  }
 
   var [background, setBackground] = useState({
     backgroundImage: `url(${cdnBase}/${user.id}.jpg)`,
@@ -30,7 +40,7 @@ function DP(props) {
   }, [])
 
   return (
-    <div className={`header-dp ${className}`} style={background} onClick={onClick}>{text}</div>
+    <div className={`dp ${className}`} style={{...background, ...sz}} onClick={onClick}>{text}</div>
   );
 }
 

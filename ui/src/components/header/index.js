@@ -83,12 +83,12 @@ function Header(props) {
       <div className='header'>
           <img src={userProfileOpen?`img/header/close.png`:`img/header/menu.png`} id="header-menu" onClick={userProfileOpen?hideUserProfile:toggleMenu}/>
           <div className='header-text'>ISKCON Mysore Volunteering</div>
-          <DP onClick={showUserProfile} user={user}/>
+          <DP onClick={showUserProfile} user={user} className={`header-dp ${userProfileOpen?"hide":""}`}/>
       </div>
 
       {userProfileOpen && <div className={`header-user-menu`}> 
         <div className='header-user-profile-header'>
-            <DP user={user}/>
+            <DP user={user} className="user-profle-dp" size={"25vw"}/>
             <div className='header-user-details'>
               <div className='header-username'>{user.name}</div>
               <div className='header-userrole'>{user.role.name}</div>
