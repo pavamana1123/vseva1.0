@@ -1,0 +1,32 @@
+#image-picker {
+    display: none;
+}
+
+.edipro-content {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    align-items: center;
+}
+
+.edipro-dp {
+}
+
+.edipro-dp-holder {
+    display: flex;
+    align-items: baseline;
+    margin: 3vw 0vw 0vw 7vw;
+}
+
+.edipro-pen {
+    background: aliceblue;
+    border-radius: 100%;
+    padding: 1.5vw;
+    box-shadow: 0vw 1vw 3vw 0vw #00000082;
+    height: 7vw;
+    width: 7vw;
+    position: relative;
+    left: -14vw;
+    top: -2vw;
+    cursor: pointer;
+}
