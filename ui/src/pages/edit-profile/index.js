@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import Header from '../../components/header';
 import DP from '../../components/dp';
 import "./index.css"
 import _ from "../../_";
+
+import Cropper from 'react-easy-crop'
 
 const EditProfile = (props) => {
 
@@ -17,6 +19,37 @@ const EditProfile = (props) => {
     const initImageSelect = ()=>{
         imgip.current.click()
     }
+
+    const ImageCropper = () => {
+        const [crop, setCrop] = useState({ x: 0, y: 0 })
+        const [zoom, setZoom] = useState(1)
+        const [rotation, setRotation] = useState(0)
+        
+        const onCropChange = useCallback((crop) => {
+            setCrop(crop)
+        }, [])
+        
+        const onZoomChange = useCallback((zoom) => {
+            setZoom(zoom)
+        }, [])
+        
+        const onRotationChange = useCallback((rotation) => {
+            setRotation(rotation)
+        }, [])
+    
+        return (
+            <Cropper
+                image={"https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg"} // replace with your image source
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                onCropChange={onCropChange}
+                onZoomChange={onZoomChange}
+                onRotationChange={onRotationChange}
+                aspect={1} // set the aspect ratio for 1:1 cropping
+            />
+        )
+    }
     
     return(
         <div className="edit-profile-root">
@@ -28,6 +61,7 @@ const EditProfile = (props) => {
                     <img src="img/common/pen.svg" className="edipro-pen"/>
                 </div>
             </div>:null}
+            <ImageCropper/>
         </div>
     )
 }
