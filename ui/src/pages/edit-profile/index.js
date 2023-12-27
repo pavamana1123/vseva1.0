@@ -9,6 +9,7 @@ import Cropper from 'react-easy-crop'
 const EditProfile = (props) => {
 
     var [user, setUser] = useState()
+    var [image, setImage] = useState(null)
     var imgip = useRef()
 
     useEffect(()=>{
@@ -47,9 +48,28 @@ const EditProfile = (props) => {
                 onZoomChange={onZoomChange}
                 onRotationChange={onRotationChange}
                 aspect={1} // set the aspect ratio for 1:1 cropping
+                onCropComplete={(a)=>{
+                    console.log(a)
+                }}
+                cropShape="round"
             />
         )
     }
+
+    useEffect(()=>{
+        const canvas = document.createElement('canvas')
+        var x = 150
+        canvas.width = x
+        canvas.height = x
+        const ctx = canvas.getContext('2d')
+
+        var img = new Image()
+        img.onload = ()=>{
+            ctx.drawImage(img, 200, 0, x, x, 0, 0, x, x)
+            setImage(canvas.toDataURL('image/jpeg'))
+        }
+        img.src = "/img/header/logo.png"
+    }, [])
     
     return(
         <div className="edit-profile-root">
@@ -61,7 +81,8 @@ const EditProfile = (props) => {
                     <img src="img/common/pen.svg" className="edipro-pen"/>
                 </div>
             </div>:null}
-            <ImageCropper/>
+            {/* <ImageCropper/> */}
+            {image && <img src={image}/>}
         </div>
     )
 }
