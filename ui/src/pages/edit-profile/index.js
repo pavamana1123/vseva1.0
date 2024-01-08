@@ -52,6 +52,10 @@ const EditProfile = (props) => {
                     console.log(a)
                 }}
                 cropShape="round"
+                zoomSpeed={0.1}
+                classes={{
+                    cropAreaClassName: "testClass"
+                }}
             />
         )
     }
@@ -81,7 +85,7 @@ const EditProfile = (props) => {
                     <img src="img/common/pen.svg" className="edipro-pen"/>
                 </div>
             </div>:null}
-            {/* <ImageCropper/> */}
+            <ImageCropper/>
             {image && <img src={image}/>}
         </div>
     )

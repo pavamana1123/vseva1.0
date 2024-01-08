@@ -30,3 +30,9 @@
     top: -2vw;
     cursor: pointer;
 }
+
+.testClass {
+
+    width: 90vw !important;
+    height: 90vw !important;
+}
