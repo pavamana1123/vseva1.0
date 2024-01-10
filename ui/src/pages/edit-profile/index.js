@@ -39,24 +39,28 @@ const EditProfile = () => {
         }, [])
     
         return (
-            <Cropper
-                image={src} // replace with your image source
-                crop={crop}
-                zoom={zoom}
-                rotation={rotation}
-                onCropChange={onCropChange}
-                onZoomChange={onZoomChange}
-                onRotationChange={onRotationChange}
-                aspect={1} // set the aspect ratio for 1:1 cropping
-                onCropComplete={(a)=>{
-                    console.log(a)
-                }}
-                cropShape="round"
-                zoomSpeed={0.1}
-                classes={{
-                    cropAreaClassName: "testClass"
-                }}
-            />
+            <div>
+                <div style={{color: "white"}}>Edit</div>
+                <Cropper
+                    image={src} // replace with your image source
+                    crop={crop}
+                    zoom={zoom}
+                    rotation={rotation}
+                    onCropChange={onCropChange}
+                    onZoomChange={onZoomChange}
+                    onRotationChange={onRotationChange}
+                    aspect={1} // set the aspect ratio for 1:1 cropping
+                    onCropComplete={(a)=>{
+                        console.log(a)
+                    }}
+                    cropShape="round"
+                    zoomSpeed={0.1}
+                    classes={{
+                        cropAreaClassName: "edipro-crop-area",
+                        containerClassName: "edipro-crop-container"
+                    }}
+                />
+            </div>
         )
     }
 

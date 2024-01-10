@@ -31,8 +31,11 @@
     cursor: pointer;
 }
 
-.testClass {
+.edipro-crop-container {
+    background: linear-gradient(0deg, rgba(0, 0, 0, .2) 61%, var(--bar));
+}
 
-    width: 90vw !important;
-    height: 90vw !important;
+.edipro-crop-area {
+    width: 80vw !important;
+    height: 80vw !important;
 }
