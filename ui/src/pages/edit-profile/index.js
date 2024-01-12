@@ -40,7 +40,13 @@ const EditProfile = () => {
     
         return (
             <div>
-                <div style={{color: "white"}}>Edit</div>
+                <div className="edipro-crop-head">
+                    <div className="edipro-crop-head-left">
+                        <div>{"<"}</div>
+                        <div>{"Crop Photo"}</div>
+                    </div>
+                    <div className="edipro-crop-head-done">Done</div>
+                </div>
                 <Cropper
                     image={src} // replace with your image source
                     crop={crop}
