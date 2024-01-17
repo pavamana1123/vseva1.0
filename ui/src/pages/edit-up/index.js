@@ -5,8 +5,9 @@ import "./index.css"
 import _ from "../../_";
 
 import Cropper from 'react-easy-crop'
+import Icon from "../../components/icon";
 
-const EditProfile = () => {
+const EditUserPhoto = ({deviceInfo}) => {
 
     var [user, setUser] = useState()
     var [image, setImage] = useState(null)
@@ -40,12 +41,12 @@ const EditProfile = () => {
     
         return (
             <div>
-                <div className="edipro-crop-head">
-                    <div className="edipro-crop-head-left">
+                <div className="editup-crop-head">
+                    <div className="editup-crop-head-left">
                         <div>{"<"}</div>
                         <div>{"Crop Photo"}</div>
                     </div>
-                    <div className="edipro-crop-head-done">Done</div>
+                    <div className="editup-crop-head-done">Done</div>
                 </div>
                 <Cropper
                     image={src} // replace with your image source
@@ -62,28 +63,16 @@ const EditProfile = () => {
                     cropShape="round"
                     zoomSpeed={0.1}
                     classes={{
-                        cropAreaClassName: "edipro-crop-area",
-                        containerClassName: "edipro-crop-container"
+                        cropAreaClassName: "editup-crop-area",
+                        containerClassName: "editup-crop-container"
                     }}
                 />
             </div>
         )
     }
 
-    // useEffect(()=>{
-    //     const canvas = document.createElement('canvas')
-    //     var x = 150
-    //     canvas.width = x
-    //     canvas.height = x
-    //     const ctx = canvas.getContext('2d')
-
-    //     var img = new Image()
-    //     img.onload = ()=>{
-    //         ctx.drawImage(img, 200, 0, x, x, 0, 0, x, x)
-    //         setImage(canvas.toDataURL('image/jpeg'))
-    //     }
-    //     img.src = "/img/header/logo.png"
-    // }, [])
+    useEffect(()=>{
+    }, [])
 
     const onUserPictureSelect = (e) => {
         if(!e.target.files){
@@ -100,16 +89,24 @@ const EditProfile = () => {
         <div className="edit-profile-root">
             <Header/>
             <input ref={imgip} id="image-picker" type="file" accept="image/*" onChange={onUserPictureSelect}/>
-            {user?<div className="edipro-content">
-                <div className="edipro-dp-holder" onClick={initImageSelect}>
-                    <DP className="edipro-dp" user={user} size={"40vw"}/>
-                    <img src="img/common/pen.svg" className="edipro-pen"/>
-                </div>
-            </div>:null}
-            {image && <ImageCropper src={image}/>}
-            {/* {image && <img src={image}/>} */}
+            <div className="editup-img-sel-cont">
+            {!deviceInfo.isComp?
+                <div className="editup-drag-space"></div>:
+                <div className="editup-img-sel" onClick={initImageSelect}>
+                    <div>{"Click here"}</div>
+                    <div className="editup-flex">
+                        <Icon name="image" color={"black"}/>
+                        <div>{"to select image from gallery"}</div>
+                    </div>
+                    <div>{"OR"}</div>
+                    <div className="editup-flex">
+                        <Icon name="photo-camera" color={"black"}/>
+                        <div>{"to open camera"}</div>
+                    </div>
+                </div>}
+            </div>
         </div>
     )
 }
 
-export default EditProfile 
+export default EditUserPhoto 

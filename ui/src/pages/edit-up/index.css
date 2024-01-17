@@ -2,23 +2,23 @@
     display: none;
 }
 
-.edipro-content {
+.editup-content {
     display: flex;
     flex-direction: column;
     width: 100vw;
     align-items: center;
 }
 
-.edipro-dp {
+.editup-dp {
 }
 
-.edipro-dp-holder {
+.editup-dp-holder {
     display: flex;
     align-items: baseline;
     margin: 3vw 0vw 0vw 7vw;
 }
 
-.edipro-pen {
+.editup-pen {
     background: aliceblue;
     border-radius: 100%;
     padding: 1.5vw;
@@ -31,16 +31,16 @@
     cursor: pointer;
 }
 
-.edipro-crop-container {
+.editup-crop-container {
     background: linear-gradient(0deg, rgba(0, 0, 0, .2) 61%, var(--bar));
 }
 
-.edipro-crop-area {
+.editup-crop-area {
     width: 80vw !important;
     height: 80vw !important;
 }
 
-.edipro-crop-head{
+.editup-crop-head{
     position: absolute;
     z-index: 1;
     color: white;
@@ -53,6 +53,31 @@
     left: 0;
 }
 
-.edipro-crop-head-left {
+.editup-flex {
     display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editup-crop-head-left {
+    display: flex;
+}
+
+.editup-img-sel {
+    width: 70vw;
+    background: white;
+    padding: 2vw;
+    text-align: center;
+    box-shadow: -1vw 1vw 1vw #aaa;
+    cursor: pointer;
+    white-space: pre;
+    border-radius: 2vw;
+}
+
+.editup-img-sel-cont {
+    display: flex;
+    width: 100vw;
+    height: 50vh;
+    justify-content: center;
+    align-items: center;
 }
