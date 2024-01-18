@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import Header from '../../components/header';
-import DP from '../../components/dp';
+import axios from "axios";
 import "./index.css"
 import _ from "../../_";
+import ImageCropper from "./cropper";
 
-import Cropper from 'react-easy-crop'
 import Icon from "../../components/icon";
 
 const EditUserPhoto = ({deviceInfo}) => {
+
+    const minPhotoSize = 800
 
     var [user, setUser] = useState()
     var [image, setImage] = useState(null)
@@ -23,77 +25,22 @@ const EditUserPhoto = ({deviceInfo}) => {
         imgip.current.click()
     }
 
-    const ImageCropper = ({src, onComplete}) => {
-        const [crop, setCrop] = useState({ x: 0, y: 0 })
-        const [zoom, setZoom] = useState(1)
-        const [rotation, setRotation] = useState(0)
-        const [cropValue, setCropValue] = useState()
-        
-        const onCropChange = useCallback((crop) => {
-            setCrop(crop)
-        }, [])
-        
-        const onZoomChange = useCallback((zoom) => {
-            setZoom(zoom)
-        }, [])
-        
-        const onRotationChange = useCallback((rotation) => {
-            setRotation(rotation)
-        }, [])
-
-        const onCropValueChange = useCallback((cropValue) => {
-            setCropValue(cropValue)
-        }, [])
-
-        const onDone = ()=>{
-            const img = new Image()
-            img.onload = () => {
-                onComplete({
-                    x: img.naturalWidth * (cropValue.x/100),
-                    y: img.naturalHeight * (cropValue.y/100),
-                    width: img.naturalWidth * (cropValue.width/100),
-                    height: img.naturalHeight * (cropValue.height/100)
-                })
-            }
-            img.src = src
-        }
-    
-        return (
-            <div>
-                <div className="editup-crop-head">
-                    <div className="editup-crop-head-left">
-                        <div>{"<"}</div>
-                        <div>{"Crop Photo"}</div>
-                    </div>
-                    <div className="editup-crop-head-done" onClick={onDone}>Done</div>
-                </div>
-                <Cropper
-                    image={src}
-                    crop={crop}
-                    zoom={zoom}
-                    rotation={rotation}
-                    onCropChange={onCropChange}
-                    onZoomChange={onZoomChange}
-                    onRotationChange={onRotationChange}
-                    aspect={1}
-                    onCropComplete={onCropValueChange}
-                    cropShape="round"
-                    zoomSpeed={0.1}
-                />
-            </div>
-        )
-    }
-
-    useEffect(()=>{
-    }, [])
-
     const onUserPictureSelect = (e) => {
         if(!e.target.files){
             return
         }
         const reader = new FileReader()
         reader.onload = (e) => {
-            setImage(e.target.result)
+            var img = new Image()
+            img.onload = ()=>{
+                var min = img.naturalHeight>=img.naturalWidth?img.naturalWidth:img.naturalHeight
+                if(min>=800){
+                    setImage(e.target.result)
+                }else{
+                    alert(`This image is small in size. Please select an image that is atleast 800 pixels in width and height.`)
+                }
+            }
+            img.src = e.target.result
         }
         reader.readAsDataURL(e.target.files[0])
     }
@@ -108,7 +55,31 @@ const EditUserPhoto = ({deviceInfo}) => {
         var img = new Image()
         img.onload = ()=>{
             ctx.drawImage(img, -cropValue.x, -cropValue.y)
-            setCroppedImage(canvas.toDataURL('image/jpeg'))
+
+            const scaledCanvas = document.createElement('canvas')
+            scaledCanvas.width = minPhotoSize
+            scaledCanvas.height = minPhotoSize
+            const scaledCtx = scaledCanvas.getContext('2d')
+            scaledCtx.drawImage(canvas, 0, 0, minPhotoSize, minPhotoSize)
+
+            scaledCanvas.toBlob(blob => {
+                const formData = new FormData()
+                formData.append('file', blob, `${user.id}.jpg`)
+    
+                axios.post(`https://cdn.iskconmysore.org/content?path=vseva/dp/${user.id}.jpg`, formData, {
+                    headers: {
+                        'api-key': '0fd429a8-89b8-4524-8d12-a3dd7b6b1dc7',
+                        'Content-Type': 'image/jpeg',
+                    },
+                })
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.error('Error uploading image:', error)
+                });
+            }, 'image/jpg')
+            
             setImage(null)
         }
         img.src = image
@@ -120,7 +91,7 @@ const EditUserPhoto = ({deviceInfo}) => {
             <input ref={imgip} id="image-picker" type="file" accept="image/*" onChange={onUserPictureSelect}/>
 
             {image?
-                <ImageCropper src={image} onComplete={onComplete}/>
+                <ImageCropper src={image} minSize={minPhotoSize} onComplete={onComplete}/>
                 :
                 <div className="editup-img-sel-cont">
                     {!deviceInfo.isComp?

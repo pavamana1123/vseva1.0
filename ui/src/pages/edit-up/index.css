@@ -31,18 +31,7 @@
     cursor: pointer;
 }
 
-.editup-crop-head{
-    position: absolute;
-    z-index: 1;
-    color: white;
-    
-    display: flex;
-    width: 100vw;
-    justify-content: space-between;
 
-    top: 2vh;
-    left: 0;
-}
 
 .editup-flex {
     display: flex;
@@ -50,9 +39,7 @@
     justify-content: center;
 }
 
-.editup-crop-head-left {
-    display: flex;
-}
+
 
 .editup-img-sel {
     display: flex;

@@ -1,0 +1,16 @@
+.imgcropup-crop-head{
+    position: absolute;
+    z-index: 1;
+    color: white;
+    
+    display: flex;
+    width: 100vw;
+    justify-content: space-between;
+
+    top: 2vh;
+    left: 0;
+}
+
+.imgcropup-crop-head-left {
+    display: flex;
+}
