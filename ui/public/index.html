@@ -15,11 +15,8 @@
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
             console.log('ServiceWorker registration successful with scope: ', registration.scope)
-            console.log('beforeinstallprompt' in window)
-
             window.addEventListener('beforeinstallprompt', (event) => {
-              console.log(event)
-              console.log(event)
+              event.prompt()
             })
           }, function(err) {
             console.log('ServiceWorker registration failed: ', err)
