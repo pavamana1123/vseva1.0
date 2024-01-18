@@ -9,33 +9,47 @@
       name="description"
       content="ISKCON Mysore volunteer services"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            console.log('ServiceWorker registration successful with scope: ', registration.scope)
           }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-        });
+            console.log('ServiceWorker registration failed: ', err)
+          })
+        })
       }
+
+      console.log('beforeinstallprompt' in window)
+
+      if ('serviceWorker' in navigator && 'beforeinstallprompt' in window) {
+        window.addEventListener('beforeinstallprompt', (event) => {
+          console.log(event)
+          // event.preventDefault()
+
+          // const installPromptEvent = event
+
+          // const installButton = document.getElementById('installButton')
+          // installButton.style.display = 'block'
+
+          // installButton.addEventListener('click', () => {
+          //   installPromptEvent.prompt()
+
+          //   installPromptEvent.userChoice.then((choiceResult) => {
+          //     if (choiceResult.outcome === 'accepted') {
+          //       console.log('User accepted the install prompt')
+          //     } else {
+          //       console.log('User dismissed the install prompt')
+          //     }
+
+          //     installButton.style.display = 'none'
+          //   })
+          // })
+        })
+      }
+
     </script>
-
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>ISKCON Mysore Volunteering</title>
   </head>
   <body>
