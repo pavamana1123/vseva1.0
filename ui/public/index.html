@@ -15,39 +15,20 @@
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
             console.log('ServiceWorker registration successful with scope: ', registration.scope)
+            console.log('beforeinstallprompt' in window)
+
+            if ('serviceWorker' in navigator && 'beforeinstallprompt' in window) {
+              window.addEventListener('beforeinstallprompt', (event) => {
+                console.log(event)
+              })
+            }
           }, function(err) {
             console.log('ServiceWorker registration failed: ', err)
           })
         })
       }
 
-      console.log('beforeinstallprompt' in window)
 
-      if ('serviceWorker' in navigator && 'beforeinstallprompt' in window) {
-        window.addEventListener('beforeinstallprompt', (event) => {
-          console.log(event)
-          // event.preventDefault()
-
-          // const installPromptEvent = event
-
-          // const installButton = document.getElementById('installButton')
-          // installButton.style.display = 'block'
-
-          // installButton.addEventListener('click', () => {
-          //   installPromptEvent.prompt()
-
-          //   installPromptEvent.userChoice.then((choiceResult) => {
-          //     if (choiceResult.outcome === 'accepted') {
-          //       console.log('User accepted the install prompt')
-          //     } else {
-          //       console.log('User dismissed the install prompt')
-          //     }
-
-          //     installButton.style.display = 'none'
-          //   })
-          // })
-        })
-      }
 
     </script>
     <title>ISKCON Mysore Volunteering</title>

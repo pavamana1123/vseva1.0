@@ -4,6 +4,7 @@
   "start_url": "./",
   "id": "IMV Seva 2.0",
   "theme_color": "#000",
+  "scope": "./",
   "background_color": "#000",
   "icons": [
     {
