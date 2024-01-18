@@ -9,8 +9,8 @@ function Home(props){
     // _.auth()
 
     return (
-        <div>
-          <button id="install" >Install</button>
+        <div className='home-root'>
+          <div id="install" >Install</div>
         </div>
     )
 }

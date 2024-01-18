@@ -1,0 +1,26 @@
+#install {
+    font-size: 5vw;
+    background-color: var(--bar);
+    padding: 1.5vw;
+    border-radius: 1vw;
+    color: white;
+    cursor: pointer;
+}
+
+.home-root {
+    display: flex;
+    width: 100vw;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (min-width: 1080px) {
+
+    #install {
+        font-size: 1.5vw;
+        padding: 1vw;
+        border-radius: 0.5vw;
+    }
+    
+}
