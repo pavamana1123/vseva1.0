@@ -19,14 +19,14 @@ function DP(props) {
   }
 
   var [background, setBackground] = useState({
-    backgroundImage: `url(${cdnBase}/${user.id}.jpg)`,
+    backgroundImage: `url(${cdnBase}/${user.id}.jpeg)`,
     backgroundSize: 'cover',
     backgroundPosition: 'center'
 })
   var [text, setText] = useState("")
 
   useEffect(()=>{
-    axios.head(`${cdnBase}/${user.id}.jpg`)
+    axios.head(`${cdnBase}/${user.id}.jpeg`)
     .then(()=>{
 
     })

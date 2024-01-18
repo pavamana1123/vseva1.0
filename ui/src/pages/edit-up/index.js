@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import Header from '../../components/header';
-import axios from "axios";
+import API from "../../api";
 import "./index.css"
 import _ from "../../_";
 import ImageCropper from "./cropper";
@@ -62,23 +62,14 @@ const EditUserPhoto = ({deviceInfo}) => {
             const scaledCtx = scaledCanvas.getContext('2d')
             scaledCtx.drawImage(canvas, 0, 0, minPhotoSize, minPhotoSize)
 
-            scaledCanvas.toBlob(blob => {
-                const formData = new FormData()
-                formData.append('file', blob, `${user.id}.jpg`)
-    
-                axios.post(`https://cdn.iskconmysore.org/content?path=vseva/dp/${user.id}.jpg`, formData, {
-                    headers: {
-                        'api-key': '0fd429a8-89b8-4524-8d12-a3dd7b6b1dc7',
-                        'Content-Type': 'image/jpeg',
-                    },
-                })
-                .then(response => {
-                    console.log(response.data)
-                })
-                .catch(error => {
-                    console.error('Error uploading image:', error)
-                });
-            }, 'image/jpg')
+            const imageDataURL = scaledCanvas.toDataURL('image/jpeg', 0.5)
+            const filename = `${user.id}.jpeg`
+
+            new API().call('/set-user-photo', { imageDataURL, filename }).then(()=>{
+                console.log("uplaoded")
+            }).catch(err=>{
+                console.log(err)
+            })
             
             setImage(null)
         }

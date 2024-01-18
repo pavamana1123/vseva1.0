@@ -22,12 +22,12 @@ function Header(props) {
     var currentUser = save.current.users[save.current.index]
     setUser(currentUser)
 
-    axios.head(`${cdnBase}/${currentUser.id}.jpg`)
+    axios.head(`${cdnBase}/${currentUser.id}.jpeg`)
     .then(()=>{
       setDpParams({
         dpFound: true,
         background: {
-          backgroundImage: `url(${cdnBase}/${currentUser.id}.jpg)`,
+          backgroundImage: `url(${cdnBase}/${currentUser.id}.jpeg)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         },
