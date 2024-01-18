@@ -17,11 +17,10 @@
             console.log('ServiceWorker registration successful with scope: ', registration.scope)
             console.log('beforeinstallprompt' in window)
 
-            if ('serviceWorker' in navigator && 'beforeinstallprompt' in window) {
-              window.addEventListener('beforeinstallprompt', (event) => {
-                console.log(event)
-              })
-            }
+            window.addEventListener('beforeinstallprompt', (event) => {
+              console.log(event)
+              console.log(event)
+            })
           }, function(err) {
             console.log('ServiceWorker registration failed: ', err)
           })
