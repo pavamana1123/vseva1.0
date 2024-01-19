@@ -6,7 +6,14 @@ const getSave = ()=>{
   }catch{
     return {}
   }
+}
 
+const setSave = (save)=>{
+  try {
+    return Cookies.set("save", JSON.stringify(save, null, 0))
+  }catch{
+    return {}
+  }
 }
 
 const auth = ()=>{
@@ -40,6 +47,7 @@ const preacherList = [
 
 const _ = {
     getSave,
+    setSave,
     auth,
     emailRegex,
     phoneRegex,

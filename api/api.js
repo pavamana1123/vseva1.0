@@ -9,18 +9,19 @@ const sendError = (res, code, msg) => {
 const verifyUser = async ({ body }, res, db) => {
   const { id } = body
   db.query(`
-    SELECT *
+    SELECT users.id, users.name, roles.id as roleID, roles.name as roleName, roles.index as roleIndex
       FROM (
-          SELECT phone, email FROM volunteers
+          SELECT id, name, phone, email, "volunteer" as roleID FROM volunteers
           UNION
-          SELECT phone, email FROM approles
+          SELECT id, name, phone, email, roleID FROM approles
       ) AS users
+    JOIN roles ON users.roleID=roles.id
     WHERE phone = '${id}' or email = '${id}';`
   ).then(result=>{
     if(result){
       if(result.length){
         res.status(200)
-        res.end()
+        res.send(result)
       }else{
         sendError(res, 404, "User not found")
       }
@@ -43,8 +44,8 @@ const sendOTP = async ({ body }, res) => {
 
 const verifyOTP = async ({ body }, res) => {
   otp.verify(body)
-  .then(() => {
-    res.status(200).end()
+  .then(status => {
+    res.status(status).end()
   })
   .catch(error => {
     sendError(res, 500, error)

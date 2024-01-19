@@ -6,32 +6,35 @@ import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
 import _ from "../../_"
 import API from "../../api"
+import {Spinner} from "../../components/spinner"
 
 const Login = () => {
 
-  // _.auth()
+  _.auth()
 
-  const InitState = -1
-  const UserVerificationPending = 0
+  const InitState = 0
+  const UserVerificationPending = 1
   const OTPSendingPending = 2
+  const OTPSendingSuccessful = 3
   const OTPVerificationPending = 4
-  const OTPVerificationTimedOut = 5
-  const OTPVerificationFailed = 6
-  const SigningIn = 7
+  const SignInPending = 5
 
   const initUserPrompt = "Enter your registered WhatsApp number or registered Email ID"
-  const expirySeconds = 3
+  const expirySeconds = 300
 
   var [ loginState, setLoginState ] = useState(InitState)
   var [ statusText, setStatusText ] = useState("")
   var [ buttonText, setButtonText ] = useState("Send OTP")
   var [ promptText, setPromptText ] = useState(initUserPrompt)
+  var [ inputType, setInputType ] = useState("text")
+  var [ inputMaxLen, setInputMaxLen ] = useState(-1)
   var [ timerOn, setTimerOn ] = useState(false)
 
   var id = useRef()
   var target = useRef()
   var timerID = useRef()
   var expiry = useRef()
+  var users = useRef()
 
   const handleSendOTP = ()=>{
     if(loginState==OTPSendingPending){
@@ -39,7 +42,8 @@ const Login = () => {
     }
     setLoginState(UserVerificationPending)
     new API().call("/verify-user", { id: id.current.value })
-    .then(()=>{
+    .then(res=>{
+      users.current = res.data
       setLoginState(OTPSendingPending)
     }).catch(err=>{
       setLoginState(InitState)
@@ -51,23 +55,60 @@ const Login = () => {
     })
   }
 
+  const handleVerifyOTP = ()=>{
+
+    if(loginState==UserVerificationPending){
+      return
+    }
+    setLoginState(OTPVerificationPending)
+    new API().call("/verify-otp", { 
+      id: `vseva-login-${target.current}`,
+      otp: id.current.value
+    }).then(()=>{
+      setLoginState(SignInPending)
+      _.setSave({
+        index: 0,
+        users: users.current
+      })
+      window.open("/home", "_self")
+    }).catch(err=>{
+      setLoginState(OTPSendingSuccessful)
+      if(err.response.status==403){
+        id.current.value=""
+        toast.error(`Incorrect OTP. Please enter again.`)
+      }else{
+        toast.error(`Could not verify OTP: ${err.response.data}. Please try again!`)
+      }
+    })
+  }
+
   useEffect(()=>{
     if(loginState == InitState){
       setStatusText("")
       setButtonText("Send OTP")
       setPromptText(initUserPrompt)
+      setInputType("text")
+      setInputMaxLen(-1)
     } else if(loginState == UserVerificationPending){
       setStatusText("Verifying user..")
       setButtonText("Verifying user..")
     } else if(loginState == OTPSendingPending){
       setStatusText("Sending OTP...")
       setButtonText("Sending OTP...")
-    } else if(loginState == OTPVerificationPending){
+    } else if(loginState == OTPSendingSuccessful){
       setButtonText("Verify OTP")
       setPromptText(`Enter the 6-digit OTP sent to ${target.current}`)
       setTimerOn(true)
+      setInputType("number")
+      setInputMaxLen(6)
+      id.current.focus()
       expiry.current = moment().add(expirySeconds, 'seconds')
-    } else{
+    } else if (loginState == OTPVerificationPending){
+      setButtonText("Verifying OTP...")
+    } else if (loginState == SignInPending) {
+      setStatusText("Signing you in..")
+      setTimerOn(false)
+    } else {
       setStatusText("")
     }
   }, [loginState])
@@ -78,7 +119,7 @@ const Login = () => {
         id: `vseva-login-${id.current.value}`,
         target: id.current.value
       }).then(()=>{
-        setLoginState(OTPVerificationPending)
+        setLoginState(OTPSendingSuccessful)
         target.current = id.current.value
         id.current.value = ""
       }).catch(err=>{
@@ -111,24 +152,27 @@ const Login = () => {
         <img src="/img/header/logo.png" className="login-logo" />
 
         <div className='login-status'>{statusText}</div>
+        {loginState==SignInPending?<Spinner size={5}/>:null}
 
-        <div className='login-form'>
-          <label className='login-label'>{promptText}</label>
-          <input
-            type="text"
-            className="login-input"
-            ref={id}
-            defaultValue={"6364903722"}
-          />
+        {loginState<SignInPending?
+          <div className='login-form'>
+            <label className='login-label'>{promptText}</label>
+            <input
+              className="login-input"
+              ref={id}
+              type={inputType}
+              maxLength={inputMaxLen}
+            />
 
-          <button
-            className="login-send-button"
-            onClick={handleSendOTP}
-            disabled={loginState==OTPSendingPending}
-          >
-            {buttonText}
-          </button>
-        </div>
+            <button
+              className="login-send-button"
+              onClick={loginState == OTPSendingSuccessful? handleVerifyOTP: handleSendOTP}
+              disabled={loginState==OTPSendingPending || loginState == OTPVerificationPending}
+            >
+              {buttonText}
+            </button>
+          </div>:null
+        }
     </div>
   )
 }

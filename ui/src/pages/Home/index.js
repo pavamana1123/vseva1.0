@@ -6,11 +6,11 @@ import _ from "../../_"
 
 function Home(props){
 
-    // _.auth()
+    _.auth()
 
     return (
-        <div className='home-root'>
-          <div id="install" >Install</div>
+        <div>
+          <Header/>
         </div>
     )
 }

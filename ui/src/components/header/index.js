@@ -91,7 +91,7 @@ function Header(props) {
             <DP user={user} className="user-profle-dp" size={"25vw"}/>
             <div className='header-user-details'>
               <div className='header-username'>{user.name}</div>
-              <div className='header-userrole'>{user.role.name}</div>
+              <div className='header-userrole'>{user.roleName}</div>
             </div>
         </div>
         <hr className='header-user-hr'/>

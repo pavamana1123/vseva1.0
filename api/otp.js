@@ -38,8 +38,8 @@ const otp = {
           body: JSON.stringify({ otp , id }),
         })
         .then((response) => {
-          if (response.ok) {
-            resolve('OTP verified')
+          if (response.ok || response.status==403) {
+            resolve(response.status)
           } else {
             reject(`Failed to verify OTP. Status: ${response.status}`)
           }

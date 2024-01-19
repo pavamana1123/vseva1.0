@@ -29,7 +29,7 @@ function App() {
           <Route path="/elements" element={<Elements/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
           <Route path="/edit-up" element={<EditUserPhoto deviceInfo={deviceInfo.current}/>}></Route>
-          <Route path="/" element={<Home/>}></Route>
+          <Route path="/home" element={<Home/>}></Route>
           {/* <Route path="/reg/:id" element={<RegForm/>}></Route> */}
         </Routes>
     </Router>
