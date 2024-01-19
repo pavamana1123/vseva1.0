@@ -1,22 +1,13 @@
-const axios = require('axios')
-const cdn = require("./cdn.js")
+import { put } from "./cdn.js"
+import { send, verify } from "./otp.js"
 
 const sendError = (res, code, msg) => {
   res.status(code)
   res.send({"error":msg})
 }
 
-const sendOTP = async ({ body }, res, db) => {
-  var { phone, email, id } = { body }
-  
-  axios.post('https://otp.iskconmysore.org/data', {
-    id, email, phone
-  }, {
-    headers: {
-      'endpoint': '/send',
-      'Content-Type': 'application/json'
-    }
-  })
+const sendOTP = async ({ body }, res) => {
+  send(body)
   .then(() => {
     res.status(200).end()
   })
@@ -25,19 +16,10 @@ const sendOTP = async ({ body }, res, db) => {
   })
 }
 
-const verifyOTP = async ({ body }, res, db) => {
-  var { otp , id } = body
-  
-  axios.post('https://otp.iskconmysore.org/data', {
-    id, otp
-  }, {
-    headers: {
-      'endpoint': '/verify',
-      'Content-Type': 'application/json'
-    }
-  })
+const verifyOTP = async ({ body }, res) => {
+  verify(body)
   .then(() => {
-    res.status(200).send()
+    res.status(200).end()
   })
   .catch(error => {
     sendError(res, error.response.status, error)
@@ -49,7 +31,7 @@ const setUserPhoto = async ({body}, res, db) => {
   const base64Data = imageDataURL.split(';base64,').pop()
   const binaryBuffer = Buffer.from(base64Data, 'base64');
 
-  cdn.put(filename, binaryBuffer).then(()=>{
+  put(filename, binaryBuffer).then(()=>{
     res.send()
   }).catch(err => {
     sendError(res, 500, `Could not set user photo: ${err}`)
@@ -78,4 +60,4 @@ class API {
     }
 }
 
-module.exports = API
+export default API

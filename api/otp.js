@@ -1,3 +1,4 @@
+const cred = require("./cred.js")
 const otpURL = 'https://otp.iskconmysore.org/data'
 
 const otp = {
@@ -6,6 +7,10 @@ const otp = {
       return new Promise((resolve, reject) => {
         fetch(otpURL, { 
             method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'api-key': cred.otp.apiKey
+            },
             body: JSON.stringify({ id, email, phone })
           }
         ).then((response) => {
@@ -23,6 +28,10 @@ const otp = {
       return new Promise((resolve, reject) => {
         fetch(otpURL, {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': cred.otp.apiKey
+          },
           body: JSON.stringify({ otp , id }),
         })
         .then((response) => {

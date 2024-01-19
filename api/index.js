@@ -3,7 +3,7 @@ const app = express()
 app.use(express.json({ limit: '10mb' }))
 const port = 3005
 
-const API  = require("./api.js")
+const API  = require("./api.js").default
 var cred = require("./cred.js")
 const DB = require("./db.js")
 
