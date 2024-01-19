@@ -7,7 +7,7 @@ const sendError = (res, code, msg) => {
 }
 
 const sendOTP = async ({ body }, res) => {
-  send(body)
+  otp.send(body)
   .then(() => {
     res.status(200).end()
   })
@@ -17,7 +17,7 @@ const sendOTP = async ({ body }, res) => {
 }
 
 const verifyOTP = async ({ body }, res) => {
-  verify(body)
+  otp.verify(body)
   .then(() => {
     res.status(200).end()
   })
