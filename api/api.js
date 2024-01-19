@@ -1,9 +1,33 @@
-import { put } from "./cdn.js"
-import { send, verify } from "./otp.js"
+const otp = require("./otp.js")
+const cdn = require("./cdn.js")
 
 const sendError = (res, code, msg) => {
   res.status(code)
-  res.send({"error":msg})
+  res.send(msg)
+}
+
+const verifyUser = async ({ body }, res, db) => {
+  const { id } = body
+  db.query(`
+    SELECT *
+      FROM (
+          SELECT phone, email FROM volunteers
+          UNION
+          SELECT phone, email FROM approles
+      ) AS users
+    WHERE phone = '${id}' or email = '${id}';`
+  ).then(result=>{
+    if(result){
+      if(result.length){
+        res.status(200)
+        res.end()
+      }else{
+        sendError(res, 404, "User not found")
+      }
+    }else{
+      sendError(res, 500, "Unknown error while verifying user. Got undefined or null result")
+    }
+  })
 }
 
 const sendOTP = async ({ body }, res) => {
@@ -12,7 +36,8 @@ const sendOTP = async ({ body }, res) => {
     res.status(200).end()
   })
   .catch(error => {
-    sendError(res, error.response.status, error)
+    console.log(error)
+    sendError(res, 500, error)
   })
 }
 
@@ -22,7 +47,7 @@ const verifyOTP = async ({ body }, res) => {
     res.status(200).end()
   })
   .catch(error => {
-    sendError(res, error.response.status, error)
+    sendError(res, 500, error)
   })
 }
 
@@ -31,7 +56,7 @@ const setUserPhoto = async ({body}, res, db) => {
   const base64Data = imageDataURL.split(';base64,').pop()
   const binaryBuffer = Buffer.from(base64Data, 'base64');
 
-  put(filename, binaryBuffer).then(()=>{
+  cdn.put(filename, binaryBuffer).then(()=>{
     res.send()
   }).catch(err => {
     sendError(res, 500, `Could not set user photo: ${err}`)
@@ -39,9 +64,10 @@ const setUserPhoto = async ({body}, res, db) => {
 }
 
 const endpoints = {
+  "/verify-user": verifyUser,
   "/send-otp": sendOTP,
   "/verify-otp": verifyOTP,
-  "/set-user-photo": setUserPhoto
+  "/set-user-photo": setUserPhoto,
 }
 
 class API {
@@ -60,4 +86,4 @@ class API {
     }
 }
 
-export default API
+module.exports = API

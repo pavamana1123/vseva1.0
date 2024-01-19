@@ -1,17 +1,19 @@
 const cred = require("./cred.js")
 const otpURL = 'https://otp.iskconmysore.org/data'
+const title = "OTP from IMV Seva App"
 
 const otp = {
   
-    send: ({ id, email, phone }) => {
+    send: ({ id, target }) => {
       return new Promise((resolve, reject) => {
         fetch(otpURL, { 
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'api-key': cred.otp.apiKey
+              'api-key': cred.otp.apiKey,
+              endpoint: "/send"
             },
-            body: JSON.stringify({ id, email, phone })
+            body: JSON.stringify({ id, target, title })
           }
         ).then((response) => {
             if (response.ok) {
@@ -30,7 +32,8 @@ const otp = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'api-key': cred.otp.apiKey
+            'api-key': cred.otp.apiKey,
+            endpoint: "/verify"
           },
           body: JSON.stringify({ otp , id }),
         })

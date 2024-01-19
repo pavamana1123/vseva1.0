@@ -3,7 +3,7 @@ class DB {
         this.db=db
     }
 
-    execQuery(q){
+    query(q){
         return new Promise((resolve, reject) => {
             this.db.query(q, (e, result) => {
                 if (e) {

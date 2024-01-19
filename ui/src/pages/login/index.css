@@ -28,7 +28,7 @@
     margin: 2vw 0 2vw 0;
   }
 
-  .login-label-1 {
+  .login-label {
     color: #666;
     font-size: 4vw;
     width: 80vw;
@@ -41,6 +41,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .login-status {
+    display: flex;
+    color: darkslategrey;
+    height: 20vw;
+    align-items: center;
   }
   
   .login-input {

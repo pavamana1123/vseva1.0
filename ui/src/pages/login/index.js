@@ -1,193 +1,134 @@
-import React, { useEffect, useRef, useState } from 'react'
-import axios from 'axios'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment'
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import "./index.css"
 import _ from "../../_"
+import API from "../../api"
 
 const Login = () => {
 
-  _.auth()
+  // _.auth()
 
-  const otpExpirationSeconds = 300
-  const [inputID, setinputID] = useState('')
-  const [otp, setOtp] = useState('')
-  const [otpSent, setOtpSent] = useState(false)
-  const [secondsRemaining, setSecondsRemaining] = useState(otpExpirationSeconds)
-  const [timerID, setTimerID] = useState()
-  const [sendOTPEnabled, setSendOTPEnabled] = useState(false)
-  const [verifyOTPEnabled, setVerifyOTPEnabled] = useState(false)
-  const [sendOTPWaiting, setSendOTPWaiting] = useState(false)
-  const [verifyOTPWaiting, setVerifyOTPWaiting] = useState(false)
-  const [otpVerified, setOTPVerified] = useState(false)
+  const InitState = -1
+  const UserVerificationPending = 0
+  const OTPSendingPending = 2
+  const OTPVerificationPending = 4
+  const OTPVerificationTimedOut = 5
+  const OTPVerificationFailed = 6
+  const SigningIn = 7
 
-  var loginInput = useRef()
-  var otpTimestamp = useRef(null)
-  var userData = useRef()
+  const initUserPrompt = "Enter your registered WhatsApp number or registered Email ID"
+  const expirySeconds = 3
+
+  var [ loginState, setLoginState ] = useState(InitState)
+  var [ statusText, setStatusText ] = useState("")
+  var [ buttonText, setButtonText ] = useState("Send OTP")
+  var [ promptText, setPromptText ] = useState(initUserPrompt)
+  var [ timerOn, setTimerOn ] = useState(false)
+
+  var id = useRef()
+  var target = useRef()
+  var timerID = useRef()
+  var expiry = useRef()
+
+  const handleSendOTP = ()=>{
+    if(loginState==OTPSendingPending){
+      return
+    }
+    setLoginState(UserVerificationPending)
+    new API().call("/verify-user", { id: id.current.value })
+    .then(()=>{
+      setLoginState(OTPSendingPending)
+    }).catch(err=>{
+      setLoginState(InitState)
+      if(err.response.status==404){
+        toast.error("This user is not found in our records!")
+      }else{
+        toast.error("User could not be verified!")
+      }
+    })
+  }
 
   useEffect(()=>{
-    loginInput.current.focus()
-  }, [])
-
-
-  const isValidInputID = (input)=> {
-    const numberRegex = /^\d{10}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    return numberRegex.test(input) || emailRegex.test(input);
-  }
-
-  const isValidOTP = (input)=> {
-    const numberRegex = /^\d{6}$/;
-    return numberRegex.test(input) 
-  }
-
-  const handleInputIDChange = (e) => {
-    setinputID(e.target.value.trim().replace(/\s/g, ''))
-    if(isValidInputID(e.target.value)){
-      setSendOTPEnabled(true)
-    }else{
-      setSendOTPEnabled(false)
+    if(loginState == InitState){
+      setStatusText("")
+      setButtonText("Send OTP")
+      setPromptText(initUserPrompt)
+    } else if(loginState == UserVerificationPending){
+      setStatusText("Verifying user..")
+      setButtonText("Verifying user..")
+    } else if(loginState == OTPSendingPending){
+      setStatusText("Sending OTP...")
+      setButtonText("Sending OTP...")
+    } else if(loginState == OTPVerificationPending){
+      setButtonText("Verify OTP")
+      setPromptText(`Enter the 6-digit OTP sent to ${target.current}`)
+      setTimerOn(true)
+      expiry.current = moment().add(expirySeconds, 'seconds')
+    } else{
+      setStatusText("")
     }
-  }
+  }, [loginState])
 
-  const handleOtpChange = (e) => {
-    setOtp(e.target.value.trim().replace(/\s/g, ''))
-    if(isValidOTP(e.target.value)){
-      setVerifyOTPEnabled(true)
-    }else{
-      setVerifyOTPEnabled(false)
+  useEffect(()=>{
+    if(loginState == OTPSendingPending){
+      new API().call("/send-otp", { 
+        id: `vseva-login-${id.current.value}`,
+        target: id.current.value
+      }).then(()=>{
+        setLoginState(OTPVerificationPending)
+        target.current = id.current.value
+        id.current.value = ""
+      }).catch(err=>{
+        setLoginState(InitState)
+        toast.error(`Could not send OTP: ${err.response.data}. Please try again!`)
+      })
     }
-  }
+  }, [loginState])
 
-  const handleSendOtp = () => {
-    const endpoint = '/api'
-    const requestData = {
-      id: `vseva-${inputID}`,
-    }
-
-    if (inputID.includes('@')) {
-      requestData.email = inputID
-    } else {
-      requestData.phone = inputID
-    }
-
-    setSendOTPWaiting(true)
-    setSendOTPEnabled(false)
-    axios
-      .post(endpoint, requestData, {
-        headers: {
-          'endpoint': '/send-otp',
-          'Content-Type': 'application/json'
+  useEffect(()=>{
+    if(timerOn){
+      setStatusText(`OTP will expire in 05:00`)
+      timerID.current = setInterval(()=>{
+        const secondsRemaining = moment.utc(expiry.current.diff(moment()))/1000
+        if(secondsRemaining <= 1){
+          setTimerOn(false)
+          setLoginState(InitState)
+          toast.error("OTP expired! Please try again.")
+          return
         }
-      })
-      .then((response) => {
-        userData.current = response.data
-        toast.success(`OTP is sent to your ${isNaN(inputID)?'Email ID':'WhatsApp number'}`)
-        setOtpSent(true)
-        startOTPTimer()
-      })
-      .catch((error) => {
-        toast.error(error.response.status==404?`Invalid ${requestData.email?'Email ID':'WhatsApp number'}`:'Could not send OTP. Please contact the admin.')
-      })
-      .finally(()=>{
-        setSendOTPWaiting(false)
-        loginInput.current.focus()
-      })
-  }
-
-  const handleVerifyOtp = () => {
-    const endpoint = '/api'
-    const requestData = {
-      id: `vseva-${inputID}`,
-      otp
+        setStatusText(`OTP will expire in ${moment.utc(expiry.current.diff(moment())).format('mm:ss')}`)
+      }, 1000)
+    }else{
+      clearInterval(timerID.current)
     }
-
-    setVerifyOTPWaiting(true)
-    setVerifyOTPEnabled(false)
-
-    axios.post(endpoint, requestData, {
-        headers: {
-          'endpoint': '/verify-otp',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(() => {
-        Cookies.set('save', JSON.stringify(userData.current))
-        window.location.href = new URLSearchParams(window.location.search).get('redirect') || '/home'
-      })
-      .catch((error) => {
-        setOtp('')
-        toast.error((()=>{
-          switch(error.response.status){
-              case 403:
-                return 'Incorrect OTP! Please check and try again.'
-              case 404:
-                return 'OTP has expired! Refresh page and try again.'
-              default:
-                return 'Unable to verify OTP. Please contact the admin.'
-            }
-          })()
-        )
-      })
-      .finally(()=>{
-        setOTPVerified(true)
-      })
-  }
-
-  const startOTPTimer = () => {
-    otpTimestamp.current = moment()
-    setTimerID(setInterval(() => {
-      var s = otpExpirationSeconds - moment.duration(moment().diff(otpTimestamp.current)).asSeconds()
-      setSecondsRemaining(s)
-      if (s <= 0) {
-        clearInterval(timerID)
-        setOtpSent(false)
-        setinputID('')
-        setSecondsRemaining(otpExpirationSeconds)
-        otpTimestamp.current=null
-        toast.error('OTP has expired! Try again.')
-      }
-    }, 1000))
-  }
+  }, [timerOn])
 
   return (
     <div className="login-container">
-      {otpVerified?
-      <div className='login-success'>
-        Login successful! Redirecting...
-      </div>
-      :<>
         <img src="/img/header/logo.png" className="login-logo" />
-        <div className='login-title'>ISKCON Mysore Volunteering</div>
-        <label className='login-label-1'>
-        {otpSent?`Enter 6-digit OTP sent to your ${isNaN(inputID)?'Email ID':'WhatsApp number'} ${inputID}`:'To login enter registered 10-digit WhatsApp number or Email-ID below'}
-        </label>
-        <input
-          type="text"
-          value={otpSent?otp:inputID}
-          onChange={otpSent?handleOtpChange:handleInputIDChange}
-          placeholder={otpSent?'Enter OTP':''}
-          className="login-input"
-          ref={loginInput}
-        />
 
-        <button
-          onClick={otpSent?handleVerifyOtp:handleSendOtp}
-          disabled={otpSent?!verifyOTPEnabled:!sendOTPEnabled}
-          className="login-send-button"
-        >
-          {otpSent?(verifyOTPWaiting?'Verifying...':'Verify OTP'):(sendOTPWaiting?'Sending...':'Send OTP')}
-        </button>
+        <div className='login-status'>{statusText}</div>
 
-        {otpSent && (
-          <div className="login-timer">
-            <span>{`Your OTP expires in  ${Math.floor(secondsRemaining / 60).toString().padStart(2, '0')}:${Math.floor(secondsRemaining % 60 < 10 ? `0${secondsRemaining % 60}` : secondsRemaining % 60).toString().padStart(2, '0')}`}</span>
-          </div>
-        )}
-      </>}
+        <div className='login-form'>
+          <label className='login-label'>{promptText}</label>
+          <input
+            type="text"
+            className="login-input"
+            ref={id}
+            defaultValue={"6364903722"}
+          />
+
+          <button
+            className="login-send-button"
+            onClick={handleSendOTP}
+            disabled={loginState==OTPSendingPending}
+          >
+            {buttonText}
+          </button>
+        </div>
     </div>
   )
 }

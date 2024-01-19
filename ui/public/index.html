@@ -15,16 +15,16 @@
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
             console.log('ServiceWorker registration successful with scope: ', registration.scope)
-            window.addEventListener('beforeinstallprompt', (event) => {
-              event.preventDefault()
-              const defferedEvent = event
-              var root = document.getElementById("install")
-              console.log(root)
-              root.addEventListener("click", (e)=>{
-                console.log(e)
-                defferedEvent.prompt()
-              })
-            })
+            // window.addEventListener('beforeinstallprompt', (event) => {
+            //   event.preventDefault()
+            //   const defferedEvent = event
+            //   var root = document.getElementById("install")
+            //   console.log(root)
+            //   root.addEventListener("click", (e)=>{
+            //     console.log(e)
+            //     defferedEvent.prompt()
+            //   })
+            // })
           }, function(err) {
             console.log('ServiceWorker registration failed: ', err)
           })

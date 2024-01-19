@@ -1,20 +1,20 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import axios from 'axios'
+import Cookies from 'js-cookie'
 
 class API {
     constructor(){
-        this.instance = axios.create();
+        this.instance = axios.create()
 
         this.instance.interceptors.request.use((config) => {
-            const savedHeader = Cookies.get('save');
+            const savedHeader = Cookies.get('save')
             if (savedHeader) {
-              const parsedHeader = JSON.parse(savedHeader);
-              config.headers['username'] = parsedHeader.username;
+              const parsedHeader = JSON.parse(savedHeader)
+              config.headers['username'] = parsedHeader.username
             }
-            return config;
+            return config
           }, (error) => {
-            return Promise.reject(error);
-          });
+            return Promise.reject(error)
+          })
     }
    
     async call(endpoint, body){
