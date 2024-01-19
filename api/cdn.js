@@ -1,11 +1,11 @@
 const cred = require("./cred.js")
-const baseUrl = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
+const cdnURL = 'https://cdn.iskconmysore.org/content?path=vseva/dp'
 
 const cdn = {
   
     head: (filename) => {
       return new Promise((resolve, reject) => {
-        fetch(`${baseUrl}/${filename}`, { method: 'HEAD' })
+        fetch(`${cdnURL}/${filename}`, { method: 'HEAD' })
           .then((response) => {
             if (response.ok) {
               resolve()
@@ -19,7 +19,7 @@ const cdn = {
   
     put: (filename, binaryFile) => {
       return new Promise((resolve, reject) => {
-        fetch(`${baseUrl}/${filename}`, {
+        fetch(`${cdnURL}/${filename}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'image/jpeg',
@@ -40,7 +40,7 @@ const cdn = {
   
     delete: (filename) => {
       return new Promise((resolve, reject) => {
-        fetch(`${baseUrl}/${filename}`, {
+        fetch(`${cdnURL}/${filename}`, {
           method: 'DELETE',
           headers: {
             'api-key': cred.cdn.apiKey

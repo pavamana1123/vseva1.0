@@ -8,23 +8,6 @@ const sendError = (res, code, msg) => {
 
 const sendOTP = async ({ body }, res, db) => {
   var { phone, email, id } = { body }
-  var userData
-  try {
-    var ftmData = await db.execQuery(`select * from ftms where ${phone?'phone':'email'}='${phone?phone:email}';`)
-    if(ftmData.length){
-      userData = {users: ftmData, role: "FTM"}
-    }else{
-      var volunteerData = await db.execQuery(`select * from volunteers where ${phone?'phone':'email'}='${phone?phone:email}';`)
-      if(volunteerData.length){
-        userData = {users: volunteerData, role: "Volunteer"}
-      }else{
-        sendError(res, 404, new Error("User not found"))
-        return
-      }
-    }
-  }catch(e){
-    sendError(res, 500, e)
-  }
   
   axios.post('https://otp.iskconmysore.org/data', {
     id, email, phone
@@ -35,7 +18,7 @@ const sendOTP = async ({ body }, res, db) => {
     }
   })
   .then(() => {
-    res.status(200).send(userData)
+    res.status(200).end()
   })
   .catch(error => {
     sendError(res, error.response.status, error)
