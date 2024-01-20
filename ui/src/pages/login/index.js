@@ -41,7 +41,7 @@ const Login = () => {
       return
     }
     setLoginState(UserVerificationPending)
-    new API().call("/verify-user", { id: id.current.value })
+    new API().call("/verify-user", { id: id.current.value.trim() })
     .then(res=>{
       users.current = res.data
       setLoginState(OTPSendingPending)
@@ -63,7 +63,7 @@ const Login = () => {
     setLoginState(OTPVerificationPending)
     new API().call("/verify-otp", { 
       id: `vseva-login-${target.current}`,
-      otp: id.current.value
+      otp: id.current.value.trim()
     }).then(()=>{
       setLoginState(SignInPending)
       _.setSave({
@@ -116,11 +116,11 @@ const Login = () => {
   useEffect(()=>{
     if(loginState == OTPSendingPending){
       new API().call("/send-otp", { 
-        id: `vseva-login-${id.current.value}`,
-        target: id.current.value
+        id: `vseva-login-${id.current.value.trim()}`,
+        target: id.current.value.trim()
       }).then(()=>{
         setLoginState(OTPSendingSuccessful)
-        target.current = id.current.value
+        target.current = id.current.value.trim()
         id.current.value = ""
       }).catch(err=>{
         setLoginState(InitState)
