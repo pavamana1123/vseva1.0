@@ -147,6 +147,16 @@ const Login = () => {
     }
   }, [timerOn])
 
+  const handleSubmit = (e)=>{
+    if(e.code=="Enter"){
+      if(loginState == OTPSendingSuccessful){
+        handleVerifyOTP()
+      }else{
+        handleSendOTP()
+      }
+    }
+  }
+
   return (
     <div className="login-container">
         <img src="/img/header/logo.png" className="login-logo" />
@@ -162,6 +172,7 @@ const Login = () => {
               ref={id}
               type={inputType}
               maxLength={inputMaxLen}
+              onKeyDown={handleSubmit}
             />
 
             <button
